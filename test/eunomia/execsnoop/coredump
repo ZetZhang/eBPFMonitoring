@@ -1,0 +1,67 @@
+arg: package.json
+libbpf: prog 'tracepoint__syscalls__sys_enter_execve': BPF program load failed: Permission denied
+libbpf: prog 'tracepoint__syscalls__sys_enter_execve': -- BEGIN PROG LOAD LOG --
+R1 type=ctx expected=fp
+; int tracepoint__syscalls__sys_enter_execve(struct trace_event_raw_sys_enter* ctx)
+0: (bf) r6 = r1
+; uid_t uid = (u32)bpf_get_current_uid_gid();
+1: (85) call bpf_get_current_uid_gid#15
+2: (bf) r7 = r0
+; id = bpf_get_current_pid_tgid();
+3: (85) call bpf_get_current_pid_tgid#14
+; event.uid = uid;
+4: (63) *(u32 *)(r10 -32) = r7
+; tgid = id >> 32;
+5: (77) r0 >>= 32
+; event.pid = tgid;
+6: (63) *(u32 *)(r10 -40) = r0
+; task = (struct task_struct*)bpf_get_current_task();
+7: (85) call bpf_get_current_task#35
+8: (b7) r1 = 1480
+9: (0f) r0 += r1
+10: (bf) r1 = r10
+; 
+11: (07) r1 += -48
+; event.ppid = BPF_CORE_READ(task, real_parent, tgid);
+12: (b7) r2 = 8
+13: (bf) r3 = r0
+14: (85) call bpf_probe_read_kernel#113
+last_idx 14 first_idx 8
+regs=4 stack=0 before 13: (bf) r3 = r0
+regs=4 stack=0 before 12: (b7) r2 = 8
+15: (b7) r1 = 1468
+16: (79) r3 = *(u64 *)(r10 -48)
+17: (0f) r3 += r1
+; event.ppid = BPF_CORE_READ(task, real_parent, tgid);
+18: (bf) r1 = r10
+19: (07) r1 += -36
+; event.ppid = BPF_CORE_READ(task, real_parent, tgid);
+20: (b7) r2 = 4
+21: (85) call bpf_probe_read_kernel#113
+last_idx 21 first_idx 8
+regs=4 stack=0 before 20: (b7) r2 = 4
+; bpf_get_current_comm(&event.comm, sizeof(event.comm));
+22: (bf) r1 = r10
+23: (07) r1 += -23
+; bpf_get_current_comm(&event.comm, sizeof(event.comm));
+24: (b7) r2 = 16
+25: (85) call bpf_get_current_comm#16
+last_idx 25 first_idx 22
+regs=4 stack=0 before 24: (b7) r2 = 16
+26: (bf) r4 = r10
+; 
+27: (07) r4 += -40
+; bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &event, sizeof(event));
+28: (bf) r1 = r6
+29: (18) r2 = 0xffff98eeb31cd200
+31: (18) r3 = 0xffffffff
+33: (b7) r5 = 36
+34: (85) call bpf_perf_event_output#25
+invalid indirect read from stack R4 off -40+12 size 36
+processed 33 insns (limit 1000000) max_states_per_insn 0 total_states 2 peak_states 2 mark_read 2
+-- END PROG LOAD LOG --
+libbpf: prog 'tracepoint__syscalls__sys_enter_execve': failed to load: -13
+libbpf: failed to load object 'execsnoop_bpf'
+libbpf: failed to load BPF skeleton 'execsnoop_bpf': -13
+failed to load skeleton
+Error: BpfError("load and attach ebpf program failed")

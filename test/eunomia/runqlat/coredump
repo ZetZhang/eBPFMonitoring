@@ -1,0 +1,74 @@
+arg: package.json
+libbpf: prog 'handle_sched_switch': BPF program load failed: Permission denied
+libbpf: prog 'handle_sched_switch': -- BEGIN PROG LOAD LOG --
+R1 type=ctx expected=fp
+; int BPF_PROG(handle_sched_switch, bool preempt, struct task_struct *prev, struct task_struct *next)
+0: (79) r6 = *(u64 *)(r1 +16)
+; if (filter_cg && !bpf_current_task_under_cgroup(&cgroup_map, 0))
+1: (18) r1 = 0xffffb65702812000
+3: (71) r1 = *(u8 *)(r1 +0)
+ R1_w=map_value(id=0,off=0,ks=4,vs=12,imm=0) R6_w=inv(id=0) R10=fp0
+; if (filter_cg && !bpf_current_task_under_cgroup(&cgroup_map, 0))
+4: (15) if r1 == 0x0 goto pc+5
+last_idx 4 first_idx 0
+regs=2 stack=0 before 3: (71) r1 = *(u8 *)(r1 +0)
+; if (filter_cg && !bpf_current_task_under_cgroup(&cgroup_map, 0))
+10: (b7) r1 = 1464
+11: (bf) r3 = r6
+12: (0f) r3 += r1
+13: (bf) r7 = r10
+; pid = BPF_CORE_READ(next, pid);
+14: (07) r7 += -24
+15: (bf) r1 = r7
+16: (b7) r2 = 4
+17: (85) call bpf_probe_read_kernel#113
+last_idx 17 first_idx 0
+regs=4 stack=0 before 16: (b7) r2 = 4
+; tsp = bpf_map_lookup_elem(&start, &pid);
+18: (18) r1 = 0xffff98ef5a67f000
+20: (bf) r2 = r7
+21: (85) call bpf_map_lookup_elem#1
+; if (!tsp)
+22: (15) if r0 == 0x0 goto pc+22
+ R0_w=map_value(id=0,off=0,ks=4,vs=8,imm=0) R6=inv(id=1) R7=fp-24 R10=fp0 fp-24=????mmmm
+; delta = bpf_ktime_get_ns() - *tsp;
+23: (85) call bpf_ktime_get_ns#5
+; if (targ_per_process)
+24: (18) r1 = 0xffffb65702812001
+26: (71) r1 = *(u8 *)(r1 +0)
+ R0_w=inv(id=0) R1_w=map_value(id=0,off=1,ks=4,vs=12,imm=0) R6=inv(id=1) R7=fp-24 R10=fp0 fp-24=????mmmm
+; if (targ_per_process)
+27: (15) if r1 == 0x0 goto pc+19
+last_idx 27 first_idx 18
+regs=2 stack=0 before 26: (71) r1 = *(u8 *)(r1 +0)
+; else if (targ_per_thread)
+47: (18) r1 = 0xffffb65702812002
+49: (71) r1 = *(u8 *)(r1 +0)
+ R0=inv(id=0) R1_w=map_value(id=0,off=2,ks=4,vs=12,imm=0) R6=inv(id=1) R7=fp-24 R10=fp0 fp-24=????mmmm
+; else if (targ_per_thread)
+50: (55) if r1 != 0x0 goto pc-16
+last_idx 50 first_idx 47
+regs=2 stack=0 before 49: (71) r1 = *(u8 *)(r1 +0)
+; else if (targ_per_pidns)
+51: (18) r1 = 0xffffb65702812003
+53: (71) r1 = *(u8 *)(r1 +0)
+ R0=inv(id=0) R1_w=map_value(id=0,off=3,ks=4,vs=12,imm=0) R6=inv(id=1) R7=fp-24 R10=fp0 fp-24=????mmmm
+; else if (targ_per_pidns)
+54: (15) if r1 == 0x0 goto pc-20
+last_idx 54 first_idx 47
+regs=2 stack=0 before 53: (71) r1 = *(u8 *)(r1 +0)
+; 
+35: (b7) r1 = 1936
+36: (0f) r6 += r1
+; bpf_probe_read_kernel_str(&histp->comm, sizeof(histp->comm),
+37: (b7) r2 = 16
+38: (bf) r3 = r6
+39: (85) call bpf_probe_read_kernel_str#115
+R1 type=inv expected=fp, pkt, pkt_meta, map_key, map_value, mem, buf
+processed 31 insns (limit 1000000) max_states_per_insn 0 total_states 2 peak_states 2 mark_read 2
+-- END PROG LOAD LOG --
+libbpf: prog 'handle_sched_switch': failed to load: -13
+libbpf: failed to load object 'runqlat_bpf'
+libbpf: failed to load BPF skeleton 'runqlat_bpf': -13
+failed to load skeleton
+Error: BpfError("load and attach ebpf program failed")
