@@ -17,7 +17,7 @@ BPF_BRANCH=${3-""}
 BASELINE_COMMIT=${BPF_NEXT_BASELINE:-$(cat ${LIBBPF_REPO}/CHECKPOINT-COMMIT)}
 BPF_BASELINE_COMMIT=${BPF_BASELINE:-$(cat ${LIBBPF_REPO}/BPF-CHECKPOINT-COMMIT)}
 
-if [ -z "${LIBBPF_REPO}" ] || [ -z "${LINUX_REPO}" ] || [ -z "${BPF_BRANCH}" ]; then
+if [ -z "${LIBBPF_REPO}" ] || [ -z "${LINUX_REPO}" ]; then
 	echo "Error: libbpf or linux repos are not specified"
 	usage
 fi
@@ -42,14 +42,19 @@ PATH_MAP=(									\
 	[tools/include/uapi/linux/bpf_common.h]=include/uapi/linux/bpf_common.h	\
 	[tools/include/uapi/linux/bpf.h]=include/uapi/linux/bpf.h		\
 	[tools/include/uapi/linux/btf.h]=include/uapi/linux/btf.h		\
+	[tools/include/uapi/linux/fcntl.h]=include/uapi/linux/fcntl.h		\
 	[tools/include/uapi/linux/if_link.h]=include/uapi/linux/if_link.h	\
 	[tools/include/uapi/linux/if_xdp.h]=include/uapi/linux/if_xdp.h		\
 	[tools/include/uapi/linux/netlink.h]=include/uapi/linux/netlink.h	\
+	[tools/include/uapi/linux/pkt_cls.h]=include/uapi/linux/pkt_cls.h	\
+	[tools/include/uapi/linux/pkt_sched.h]=include/uapi/linux/pkt_sched.h	\
+	[include/uapi/linux/perf_event.h]=include/uapi/linux/perf_event.h	\
+	[Documentation/bpf/libbpf]=docs						\
 )
 
-LIBBPF_PATHS="${!PATH_MAP[@]} :^tools/lib/bpf/Makefile :^tools/lib/bpf/Build :^tools/lib/bpf/.gitignore :^tools/include/tools/libc_compat.h"
-LIBBPF_VIEW_PATHS="${PATH_MAP[@]}"
-LIBBPF_VIEW_EXCLUDE_REGEX='^src/(Makefile|Build|test_libbpf\.c|bpf_helper_defs\.h|\.gitignore)$'
+LIBBPF_PATHS=("${!PATH_MAP[@]}" ":^tools/lib/bpf/Makefile" ":^tools/lib/bpf/Build" ":^tools/lib/bpf/.gitignore" ":^tools/include/tools/libc_compat.h")
+LIBBPF_VIEW_PATHS=("${PATH_MAP[@]}")
+LIBBPF_VIEW_EXCLUDE_REGEX='^src/(Makefile|Build|test_libbpf\.c|bpf_helper_defs\.h|\.gitignore)$|^docs/(\.gitignore|api\.rst|conf\.py)$|^docs/sphinx/.*'
 LINUX_VIEW_EXCLUDE_REGEX='^include/tools/libc_compat.h$'
 
 LIBBPF_TREE_FILTER="mkdir -p __libbpf/include/uapi/linux __libbpf/include/tools && "$'\\\n'
@@ -71,7 +76,7 @@ commit_desc()
 }
 
 # Create commit single-line signature, which consists of:
-# - full commit hash
+# - full commit subject
 # - author date in ISO8601 format
 # - full commit body with newlines replaced with vertical bars (|)
 # - shortstat appended at the end
@@ -100,7 +105,7 @@ cherry_pick_commits()
 	local libbpf_conflict_cnt
 	local desc
 
-	new_commits=$(git rev-list --no-merges --topo-order --reverse ${baseline_tag}..${tip_tag} ${LIBBPF_PATHS[@]})
+	new_commits=$(git rev-list --no-merges --topo-order --reverse ${baseline_tag}..${tip_tag} -- "${LIBBPF_PATHS[@]}")
 	for new_commit in ${new_commits}; do
 		desc="$(commit_desc ${new_commit})"
 		signature="$(commit_signature ${new_commit} "${LIBBPF_PATHS[@]}")"
@@ -134,7 +139,7 @@ cherry_pick_commits()
 		echo "Picking '${desc}'..."
 		if ! git cherry-pick ${new_commit} &>/dev/null; then
 			echo "Warning! Cherry-picking '${desc} failed, checking if it's non-libbpf files causing problems..."
-			libbpf_conflict_cnt=$(git diff --name-only --diff-filter=U -- ${LIBBPF_PATHS[@]} | wc -l)
+			libbpf_conflict_cnt=$(git diff --name-only --diff-filter=U -- "${LIBBPF_PATHS[@]}" | wc -l)
 			conflict_cnt=$(git diff --name-only | wc -l)
 			prompt_resolution=1
 
@@ -260,18 +265,21 @@ cd_to ${LIBBPF_REPO}
 git checkout -b ${LIBBPF_SYNC_TAG}
 
 for patch in $(ls -1 ${TMP_DIR}/patches | tail -n +2); do
-	if ! git am --3way --committer-date-is-author-date "${TMP_DIR}/patches/${patch}"; then
-		read -p "Applying ${TMP_DIR}/patches/${patch} failed, please resolve manually and press <return> to proceed..."
+	if ! git am -3 --committer-date-is-author-date "${TMP_DIR}/patches/${patch}"; then
+		if ! patch -p1 --merge < "${TMP_DIR}/patches/${patch}"; then
+			read -p "Applying ${TMP_DIR}/patches/${patch} failed, please resolve manually and press <return> to proceed..."
+		fi
+		git am --continue
 	fi
 done
 
 # Generate bpf_helper_defs.h and commit, if anything changed
-# restore Linux tip to use bpf_helpers_doc.py
+# restore Linux tip to use bpf_doc.py
 cd_to ${LINUX_REPO}
 git checkout ${TIP_TAG}
 # re-generate bpf_helper_defs.h
 cd_to ${LIBBPF_REPO}
-"${LINUX_ABS_DIR}/scripts/bpf_helpers_doc.py" --header			    \
+"${LINUX_ABS_DIR}/scripts/bpf_doc.py" --header					      \
 	--file include/uapi/linux/bpf.h > src/bpf_helper_defs.h
 # if anything changed, commit it
 helpers_changes=$(git status --porcelain src/bpf_helper_defs.h | wc -l)
@@ -309,10 +317,10 @@ cd_to ${LINUX_REPO}
 git checkout -b ${VIEW_TAG} ${TIP_COMMIT}
 FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --tree-filter "${LIBBPF_TREE_FILTER}" ${VIEW_TAG}^..${VIEW_TAG}
 FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --subdirectory-filter __libbpf ${VIEW_TAG}^..${VIEW_TAG}
-git ls-files -- ${LIBBPF_VIEW_PATHS[@]} | grep -v -E "${LINUX_VIEW_EXCLUDE_REGEX}" > ${TMP_DIR}/linux-view.ls
+git ls-files -- "${LIBBPF_VIEW_PATHS[@]}" | grep -v -E "${LINUX_VIEW_EXCLUDE_REGEX}" > ${TMP_DIR}/linux-view.ls
 
 cd_to ${LIBBPF_REPO}
-git ls-files -- ${LIBBPF_VIEW_PATHS[@]} | grep -v -E "${LIBBPF_VIEW_EXCLUDE_REGEX}" > ${TMP_DIR}/github-view.ls
+git ls-files -- "${LIBBPF_VIEW_PATHS[@]}" | grep -v -E "${LIBBPF_VIEW_EXCLUDE_REGEX}" > ${TMP_DIR}/github-view.ls
 
 echo "Comparing list of files..."
 diff -u ${TMP_DIR}/linux-view.ls ${TMP_DIR}/github-view.ls
