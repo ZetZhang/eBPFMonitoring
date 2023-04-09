@@ -19,7 +19,7 @@ INCLUDES := -I$(OUTPUT) -I../libbpf/include/uapi -I$(dir $(VMLINUX))
 CFLAGS := -g -Wall
 ALL_LDFLAGS := $(LDFLAGS) $(EXTRA_LDFLAGS)
 
-APPS = bootstrap claimed ringbuf-reserve-submit
+APPS = bootstrap claimed ringbuf-reserve-submit fentry claimed_perf
 
 CARGO ?= $(shell which cargo)
 ifeq ($(strip $(CARGO)),)
