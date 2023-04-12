@@ -1,0 +1,16 @@
+metrics:
+  counters:
+    - name: llc_references_total
+      help: Last level cache operations by type
+      labels:
+        - name: cpu
+          size: 4
+          decoders:
+            - name: uint
+    - name: llc_misses_total
+      help: Last level cache operations by type
+      labels:
+        - name: cpu
+          size: 4
+          decoders:
+            - name: uint

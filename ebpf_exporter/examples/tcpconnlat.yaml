@@ -1,0 +1,115 @@
+programs:
+  # See:
+  # * https://github.com/iovisor/bcc/blob/master/tools/tcpconnect.py
+  # * https://github.com/iovisor/bcc/blob/master/tools/tcpconnlat_example.txt
+  - name: tcpconnlat
+    metrics:
+      counters:
+        - name: tcpconnlat_ipv4
+          help: tcp4 connection latency(ms)
+          table: ipv4_events
+          labels:
+            - name: pid
+              size: 4
+              decoders:
+                - name: uint
+            - name: sst_addr
+              size: 4
+              decoders:
+                - name: inet_ip
+            - name: dst_addr
+              size: 4
+              decoders:
+                - name: inet_ip
+            - name: lst_port
+              size: 2
+              decoders:
+                - name: uint
+            - name: dst_port
+              size: 2
+              decoders:
+                - name: uint
+            - name: proc_name
+              size: 16
+              decoders:
+                - name: string
+    kprobes:
+      tcp_rcv_state_process: trace_tcp_rcv_state_process
+      tcp_v4_connect: trace_connect
+    code: |
+      #include <uapi/linux/ptrace.h>
+      #include <net/sock.h>
+      #include <net/tcp_states.h>
+      #include <bcc/proto.h>
+
+      struct info_t {
+          u64 ts;
+          u32 pid;
+          char task[TASK_COMM_LEN];
+      };
+      BPF_HASH(start, struct sock *, struct info_t);
+
+      // separate data structs for ipv4
+      struct ipv4_data_t {
+          u32 pid;
+          u32 saddr;
+          u32 daddr;
+          u16 lport;
+          u16 dport;
+          char task[TASK_COMM_LEN];
+      };
+      BPF_HASH(ipv4_events, struct ipv4_data_t);
+
+      int trace_connect(struct pt_regs *ctx, struct sock *sk)
+      {
+          u32 pid = bpf_get_current_pid_tgid();
+          struct info_t info = {.pid = pid};
+          info.ts = bpf_ktime_get_ns();
+          bpf_get_current_comm(&info.task, sizeof(info.task));
+          start.update(&sk, &info);
+          return 0;
+      };
+
+      // See tcp_v4_do_rcv(). So TCP_ESTBALISHED and TCP_LISTEN
+      // are fast path and processed elsewhere, and leftovers are processed by
+      // tcp_rcv_state_process(). We can trace this for handshake completion.
+      // This should all be switched to static tracepoints when available.
+      int trace_tcp_rcv_state_process(struct pt_regs *ctx, struct sock *skp)
+      {
+          // will be in TCP_SYN_SENT for handshake
+          if (skp->__sk_common.skc_state != TCP_SYN_SENT)
+              return 0;
+          // check start and calculate delta
+          struct info_t *infop = start.lookup(&skp);
+          if (infop == 0) {
+              return 0;   // missed entry or filtered
+          }
+          u64 ts = infop->ts;
+          u64 now = bpf_ktime_get_ns();
+          u64 delta_us = (now - ts) / 1000ul;
+          u64 delta_ms = delta_us / 1000;
+      #ifdef MIN_LATENCY
+          if ( delta_us < DURATION_US ) {
+              return 0; // connect latency is below latency filter minimum
+          }
+      #endif
+
+          // pull in details
+          u16 family = 0, lport = 0, dport = 0;
+          family = skp->__sk_common.skc_family;
+          lport = skp->__sk_common.skc_num;
+          dport = skp->__sk_common.skc_dport;
+
+          // emit to appropriate data path
+          if (family == AF_INET) {
+              struct ipv4_data_t data4 = {.pid = infop->pid};
+              data4.saddr = skp->__sk_common.skc_rcv_saddr;
+              data4.daddr = skp->__sk_common.skc_daddr;
+              data4.lport = lport;
+              data4.dport = ntohs(dport);
+              __builtin_memcpy(&data4.task, infop->task, sizeof(data4.task));
+              ipv4_events.increment(data4, delta_ms);
+          }
+          start.delete(&skp);
+          return 0;
+      }      

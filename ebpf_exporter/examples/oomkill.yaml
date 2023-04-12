@@ -1,0 +1,15 @@
+metrics:
+  counters:
+    - name: oom_kills_total
+      help: Count global and cgroup level OOMs
+      perf_event_array: true
+      labels:
+        - name: cgroup_path
+          size: 8
+          decoders:
+            - name: uint
+            - name: cgroup
+        - name: global_oom
+          size: 1
+          decoders:
+            - name: uint

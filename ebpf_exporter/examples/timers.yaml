@@ -1,0 +1,9 @@
+metrics:
+  counters:
+    - name: timer_starts_total
+      help: Timers fired in the kernel
+      labels:
+        - name: function
+          size: 8
+          decoders:
+            - name: ksym
