@@ -15,7 +15,11 @@ struct {
 //     unsigned int nr_running, h_nr_running;
 // };
 
+#ifdef IS_KPROBE_RQ_CLOCK
+SEC("kprobe/update_rq_clock")
+#else
 SEC("perf_event")
+#endif
 int claimed_event(struct trace_event_raw_sched_process_exec *ctx)
 {
     uint64_t cpu = bpf_get_smp_processor_id();

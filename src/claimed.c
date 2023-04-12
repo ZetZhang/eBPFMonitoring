@@ -19,14 +19,15 @@ static void sig_handler(int sig)
 	exiting = true;
 }
 
-static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
-			    int cpu, int group_fd, unsigned long flags)
+#ifndef IS_KPROBE_RQ_CLOCK
+static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu, int group_fd, unsigned long flags)
 {
 	int ret;
 
 	ret = syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
 	return ret;
 }
+#endif
 
 static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
 {
@@ -49,25 +50,28 @@ void bump_memlock_rlimit(void)
 	}
 }
 
+// FIXME: 
 static int handle_event(void *ctx, void *data, size_t data_sz) {
     const struct data_t *e = data;
 
-    printf("1: %d, 2: %d, 3: %d\n", e->cpu, e->ts, e->len);
+    printf("CPU: %d, TS: %d, qlen: %d\n", e->cpu, e->ts, e->len);
 
     return 0;
 }
 
 int main(int argc, char *argv[]) {
-    int freq = 99, pid = -1, cpu = -1;
     struct ring_buffer *rb = NULL;
-    struct perf_event_attr attr;
+    struct claimed_bpf *skel;
+    int err, prog_fd;
+
+#ifndef IS_KPROBE_RQ_CLOCK
+    int freq = 99, pid = -1, cpu = -1;
     // struct bpf_link **links = NULL;
     struct bpf_link *link = NULL;
-    struct claimed_bpf *skel;
-	int num_cpus;
+    struct perf_event_attr attr;
 	int *pefds = NULL, pefd;
-    int prog_fd;
-    int err, i;
+	int num_cpus, i;
+#endif
     
     libbpf_set_strict_mode(LIBBPF_STRICT_ALL);  
     libbpf_set_print(libbpf_print_fn);
@@ -86,11 +90,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+#ifndef IS_KPROBE_RQ_CLOCK
     num_cpus = libbpf_num_possible_cpus();
 	if (num_cpus <= 0) {
 		fprintf(stderr, "Fail to get the number of processors\n");
 		return 1;
 	}
+#endif
 
     // Load and verify the BPF program
     err = claimed_bpf__load(skel);
@@ -114,6 +120,7 @@ int main(int argc, char *argv[]) {
 		goto cleanup;
 	}
 
+#ifndef IS_KPROBE_RQ_CLOCK
     pefds = malloc(num_cpus * sizeof(int));
 	for (i = 0; i < num_cpus; i++)
 		pefds[i] = -1;
@@ -128,10 +135,10 @@ int main(int argc, char *argv[]) {
 	attr.sample_period = 0;
 
     pefd = perf_event_open(&attr, pid, cpu, -1, 0);
-    // if (pefd < 0) {
-    //     fprintf(stderr, "Fail to set up performance monitor on a CPU/Core\n");
-    //     goto cleanup;
-	// }
+    if (pefd < 0) {
+        fprintf(stderr, "Fail to set up performance monitor on a CPU/Core\n");
+        goto cleanup;
+	}
     link = bpf_program__attach_perf_event(skel->progs.claimed_event, pefd);
     if (!link) {
         err = -1;
@@ -154,6 +161,8 @@ int main(int argc, char *argv[]) {
 	// 		goto cleanup;
 	// 	}
 	// }
+
+#endif
 
     // Start monitoring ring events
     while (!exiting) {
