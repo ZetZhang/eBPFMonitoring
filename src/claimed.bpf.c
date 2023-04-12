@@ -15,7 +15,7 @@ struct {
 //     unsigned int nr_running, h_nr_running;
 // };
 
-SEC("tp/sched/sched_process_exec")
+SEC("perf_event")
 int claimed_event(struct trace_event_raw_sched_process_exec *ctx)
 {
     uint64_t cpu = bpf_get_smp_processor_id();

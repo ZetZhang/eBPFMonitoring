@@ -5,6 +5,9 @@
 #include <bpf/bpf.h>
 #include <unistd.h>
 #include <sys/resource.h>
+#include <linux/perf_event.h>
+#include <sys/syscall.h>
+#include <sys/sysinfo.h>
 #include "claimed.skel.h"
 #include "claimed.h"
 
@@ -14,6 +17,15 @@ static volatile bool exiting = false;
 static void sig_handler(int sig)
 {
 	exiting = true;
+}
+
+static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
+			    int cpu, int group_fd, unsigned long flags)
+{
+	int ret;
+
+	ret = syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
+	return ret;
 }
 
 static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
@@ -46,10 +58,16 @@ static int handle_event(void *ctx, void *data, size_t data_sz) {
 }
 
 int main(int argc, char *argv[]) {
+    int freq = 99, pid = -1, cpu = -1;
     struct ring_buffer *rb = NULL;
+    struct perf_event_attr attr;
+    // struct bpf_link **links = NULL;
+    struct bpf_link *link = NULL;
     struct claimed_bpf *skel;
+	int num_cpus;
+	int *pefds = NULL, pefd;
     int prog_fd;
-    int err;
+    int err, i;
     
     libbpf_set_strict_mode(LIBBPF_STRICT_ALL);  
     libbpf_set_print(libbpf_print_fn);
@@ -67,6 +85,12 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Failed to open skel\n");
         return 1;
     }
+
+    num_cpus = libbpf_num_possible_cpus();
+	if (num_cpus <= 0) {
+		fprintf(stderr, "Fail to get the number of processors\n");
+		return 1;
+	}
 
     // Load and verify the BPF program
     err = claimed_bpf__load(skel);
@@ -90,9 +114,49 @@ int main(int argc, char *argv[]) {
 		goto cleanup;
 	}
 
+    pefds = malloc(num_cpus * sizeof(int));
+	for (i = 0; i < num_cpus; i++)
+		pefds[i] = -1;
+
+    link = calloc(1, sizeof(struct bpf_link *));
+
+    memset(&attr, 0, sizeof(attr));
+    attr.type = PERF_TYPE_SOFTWARE;
+    attr.size = sizeof(attr);
+    attr.config = PERF_COUNT_SW_TASK_CLOCK;
+	attr.sample_freq = freq;
+	attr.sample_period = 0;
+
+    pefd = perf_event_open(&attr, pid, cpu, -1, 0);
+    // if (pefd < 0) {
+    //     fprintf(stderr, "Fail to set up performance monitor on a CPU/Core\n");
+    //     goto cleanup;
+	// }
+    link = bpf_program__attach_perf_event(skel->progs.claimed_event, pefd);
+    if (!link) {
+        err = -1;
+        goto cleanup;
+    }
+
+    // for (cpu = 0; cpu < num_cpus; cpu++) {
+	// 	/* Set up performance monitoring on a CPU/Core */
+	// 	pefd = perf_event_open(&attr, pid, cpu, -1, PERF_FLAG_FD_CLOEXEC);
+	// 	if (pefd < 0) {
+	// 		fprintf(stderr, "Fail to set up performance monitor on a CPU/Core\n");
+	// 		goto cleanup;
+	// 	}
+	// 	pefds[cpu] = pefd;
+
+	// 	/* Attach a BPF program on a CPU */
+	// 	links[cpu] = bpf_program__attach_perf_event(skel->progs.claimed_event, pefd);
+	// 	if (!links[cpu]) {
+	// 		err = -1;
+	// 		goto cleanup;
+	// 	}
+	// }
+
     // Start monitoring ring events
     while (!exiting) {
-        printf("ok\n");
         err = ring_buffer__poll(rb, 100 /* timeout, ms */);
         // err = claimed_bpf__attach(skel);
         if (err == -EINTR) {
@@ -104,8 +168,6 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-
-    claimed_bpf__detach(skel);
 
 cleanup:
     ring_buffer__free(rb);
