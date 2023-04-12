@@ -1,0 +1,8 @@
+*.o
+build
+promtool
+prometheus
+grafana
+app
+lib
+.output

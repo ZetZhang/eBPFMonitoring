@@ -38,4 +38,3 @@ int handle_exec(struct trace_event_raw_sched_process_exec *ctx)
 	bpf_perf_event_output(ctx, &pb, BPF_F_CURRENT_CPU, e, sizeof(*e));
 	return 0;
 }
-
