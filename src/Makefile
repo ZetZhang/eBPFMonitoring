@@ -19,7 +19,27 @@ INCLUDES := -I$(OUTPUT) -I../libbpf/include/uapi -I$(dir $(VMLINUX))
 CFLAGS := -g -Wall
 ALL_LDFLAGS := $(LDFLAGS) $(EXTRA_LDFLAGS)
 
-APPS = bootstrap claimed perfbuf-output ringbuf-reserve-submit fentry claimed_perf oomkill oomkilll runqueue_latency cache_ref_n_miss
+APPS = \
+	bootstrap \
+	claimed \
+	perfbuf-output \
+	ringbuf-reserve-submit \
+	fentry \
+	claimed_perf \
+	oomkill \
+	oomkilll \
+	runqueue_latency \
+	cache_ref_n_miss \
+	runqlen \
+
+COMMON_OBJ = \
+	$(OUTPUT)/trace_helpers.o \
+	$(OUTPUT)/syscall_helpers.o \
+	$(OUTPUT)/errno_helpers.o \
+	$(OUTPUT)/map_helpers.o \
+	$(OUTPUT)/uprobe_helpers.o \
+	$(OUTPUT)/btf_helpers.o \
+	$(OUTPUT)/compat.o \
 
 CARGO ?= $(shell which cargo)
 ifeq ($(strip $(CARGO)),)
@@ -123,7 +143,7 @@ $(patsubst %,$(OUTPUT)/%.o,$(BZS_APPS)): $(LIBBLAZESYM_HEADER)
 $(BZS_APPS): $(LIBBLAZESYM_OBJ)
 
 # Build application binary
-$(APPS): %: $(OUTPUT)/%.o $(LIBBPF_OBJ) | $(OUTPUT)
+$(APPS): %: $(OUTPUT)/%.o $(COMMON_OBJ) $(LIBBPF_OBJ) | $(OUTPUT)
 	$(call msg,BINARY,$@)
 	$(Q)$(CC) $(CFLAGS) $^ $(ALL_LDFLAGS) -lelf -lz -o $@
 

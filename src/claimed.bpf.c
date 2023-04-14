@@ -18,10 +18,10 @@ struct {
 #ifdef IS_KPROBE_RQ_CLOCK
 // update_rq_clock()被scheduler_tick()函数调用
 // 周期性调度器在系统活动时自动调用，是队列的时钟更新
-SEC("kprobe/update_rq_clock")
-#else
+// SEC("kprobe/update_rq_clock")
+// #else
 SEC("perf_event")
-#endif
+// #endif
 int claimed_event(struct trace_event_raw_sched_process_exec *ctx)
 {
     uint64_t cpu = bpf_get_smp_processor_id();

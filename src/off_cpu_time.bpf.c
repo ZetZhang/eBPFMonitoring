@@ -21,9 +21,6 @@ struct warn_event_t {
     u32 t_end;
 };
 
-BPF_HASH(counts, struct key_t);
-BPF_HASH(start, u32);
-
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
     __uint(max_entries, 10240);
