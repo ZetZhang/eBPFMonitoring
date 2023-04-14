@@ -2,8 +2,9 @@
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
 #include <bpf/bpf_core_read.h>
+#include "cpu_hit_situation.h"
 
-#define TASK_COMM_LEN 16
+const volatile bool targ_per_thread = false;
 
 struct key_t {
     int cpu;
