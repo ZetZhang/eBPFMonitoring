@@ -37,9 +37,6 @@ struct env {
 
 static volatile bool exiting;
 
-const char *argp_program_version = "runqlen 0.1";
-const char *argp_program_bug_address =
-	"https://github.com/iovisor/bcc/tree/master/libbpf-tools";
 const char argp_program_doc[] =
 "Summarize scheduler run queue length as a histogram.\n"
 "\n"
@@ -68,7 +65,6 @@ static const struct argp_option opts[] = {
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
 	static int pos_args;
-	printf(">>>>>>>>>>>>>>>>>>>>%c\n", key);
 	switch (key) {
 	case 'h':
 		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);
@@ -118,7 +114,6 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 		pos_args++;
 		break;
 	default:
-        printf("ok\n");
 		return ARGP_ERR_UNKNOWN;
 	}
 	return 0;

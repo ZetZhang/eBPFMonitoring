@@ -1,0 +1,17 @@
+{
+	"ulid": "01GY508AXWP6Y3FB76BFYECQXX",
+	"minTime": 1681636941874,
+	"maxTime": 1681639200000,
+	"stats": {
+		"numSamples": 67008,
+		"numSeries": 857,
+		"numChunks": 857
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GY508AXWP6Y3FB76BFYECQXX"
+		]
+	},
+	"version": 1
+}

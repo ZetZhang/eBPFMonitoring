@@ -68,3 +68,106 @@ logger=cleanup t=2023-03-26T02:31:25.777875848+08:00 level=info msg="Completed c
 logger=server t=2023-03-26T02:35:21.011020748+08:00 level=info msg="Shutdown started" reason="System signal: interrupt"
 logger=tracing t=2023-03-26T02:35:21.016191691+08:00 level=info msg="Closing tracing"
 logger=ticker t=2023-03-26T02:35:21.015410702+08:00 level=info msg=stopped last_tick=2023-03-26T02:35:20+08:00
+logger=settings t=2023-04-16T17:36:31.481976387+08:00 level=info msg="Starting Grafana" version=9.4.7 commit=4add91f03d branch=HEAD compiled=2023-03-17T07:56:52+08:00
+logger=settings t=2023-04-16T17:36:31.482595957+08:00 level=warn msg="\"sentry\" frontend logging provider is deprecated and will be removed in the next major version. Use \"grafana\" provider instead."
+logger=settings t=2023-04-16T17:36:31.48264792+08:00 level=info msg="Config loaded from" file=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/conf/defaults.ini
+logger=settings t=2023-04-16T17:36:31.482686193+08:00 level=info msg="Path Home" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7
+logger=settings t=2023-04-16T17:36:31.482723838+08:00 level=info msg="Path Data" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data
+logger=settings t=2023-04-16T17:36:31.482751496+08:00 level=info msg="Path Logs" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/log
+logger=settings t=2023-04-16T17:36:31.482778176+08:00 level=info msg="Path Plugins" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/plugins
+logger=settings t=2023-04-16T17:36:31.482808697+08:00 level=info msg="Path Provisioning" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/conf/provisioning
+logger=settings t=2023-04-16T17:36:31.482841173+08:00 level=info msg="App mode production"
+logger=sqlstore t=2023-04-16T17:36:31.483417232+08:00 level=info msg="Connecting to DB" dbtype=sqlite3
+logger=migrator t=2023-04-16T17:36:31.525433827+08:00 level=info msg="Starting DB migrations"
+logger=migrator t=2023-04-16T17:36:31.555027934+08:00 level=info msg="migrations completed" performed=0 skipped=571 duration=8.092549ms
+logger=licensing t=2023-04-16T17:36:31.557922265+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=plugin.loader t=2023-04-16T17:36:31.687276285+08:00 level=info msg="Plugin registered" pluginID=input
+logger=plugin.finder t=2023-04-16T17:36:31.687387823+08:00 level=warn msg="Skipping finding plugins as directory does not exist" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/plugins
+logger=secrets t=2023-04-16T17:36:31.687513749+08:00 level=info msg="Envelope encryption state" enabled=true currentprovider=secretKey.v1
+logger=query_data t=2023-04-16T17:36:31.693976739+08:00 level=info msg="Query Service initialization"
+logger=live.push_http t=2023-04-16T17:36:31.717126643+08:00 level=info msg="Live Push Gateway initialization"
+logger=infra.usagestats.collector t=2023-04-16T17:36:33.313026406+08:00 level=info msg="registering usage stat providers" usageStatsProvidersLen=2
+logger=provisioning.alerting t=2023-04-16T17:36:33.314752347+08:00 level=info msg="starting to provision alerting"
+logger=provisioning.alerting t=2023-04-16T17:36:33.314830151+08:00 level=info msg="finished to provision alerting"
+logger=ngalert.state.manager t=2023-04-16T17:36:33.315510554+08:00 level=info msg="Warming state cache for startup"
+logger=grafanaStorageLogger t=2023-04-16T17:36:33.315323237+08:00 level=info msg="storage starting"
+logger=report t=2023-04-16T17:36:33.316913824+08:00 level=warn msg="Scheduling and sending of reports disabled, SMTP is not configured and enabled. Configure SMTP to enable."
+logger=http.server t=2023-04-16T17:36:33.320893504+08:00 level=info msg="HTTP Server Listen" address=[::]:3000 protocol=http subUrl= socket=
+logger=ngalert.state.manager t=2023-04-16T17:36:33.348669967+08:00 level=info msg="State cache has been initialized" states=0 duration=33.152219ms
+logger=ngalert.multiorg.alertmanager t=2023-04-16T17:36:33.348929919+08:00 level=info msg="starting MultiOrg Alertmanager"
+logger=ticker t=2023-04-16T17:36:33.348955691+08:00 level=info msg=starting first_tick=2023-04-16T17:36:40+08:00
+logger=context t=2023-04-16T17:37:08.844681558+08:00 level=warn msg="failed to look up session from cookie" error="user token not found"
+logger=context userId=0 orgId=0 uname= t=2023-04-16T17:37:08.856444664+08:00 level=info msg="Request Completed" method=GET path=/dashboards status=302 remote_addr=[::1] time_ms=22 duration=23.004279ms size=29 referer= handler=/dashboards/
+logger=http.server t=2023-04-16T17:37:17.906826115+08:00 level=info msg="Successful Login" User=admin@localhost
+logger=context userId=1 orgId=1 uname=admin t=2023-04-16T17:37:42.522245942+08:00 level=info msg="Request Completed" method=GET path=/api/live/ws status=-1 remote_addr=[::1] time_ms=32 duration=32.977744ms size=0 referer= handler=/api/live/ws
+logger=cleanup t=2023-04-16T17:46:33.349925187+08:00 level=info msg="Completed cleanup jobs" duration=33.953955ms
+logger=cleanup t=2023-04-16T17:56:33.353643698+08:00 level=info msg="Completed cleanup jobs" duration=33.803624ms
+logger=cleanup t=2023-04-16T18:06:33.346480012+08:00 level=info msg="Completed cleanup jobs" duration=30.602198ms
+logger=server t=2023-04-16T18:07:45.891228903+08:00 level=info msg="Shutdown started" reason="System signal: interrupt"
+logger=ticker t=2023-04-16T18:07:45.891487453+08:00 level=info msg=stopped last_tick=2023-04-16T18:07:40+08:00
+logger=tracing t=2023-04-16T18:07:45.891717439+08:00 level=info msg="Closing tracing"
+logger=settings t=2023-04-16T18:23:22.528442854+08:00 level=info msg="Starting Grafana" version=9.4.7 commit=4add91f03d branch=HEAD compiled=2023-03-17T07:56:52+08:00
+logger=settings t=2023-04-16T18:23:22.528964708+08:00 level=warn msg="\"sentry\" frontend logging provider is deprecated and will be removed in the next major version. Use \"grafana\" provider instead."
+logger=settings t=2023-04-16T18:23:22.529079248+08:00 level=info msg="Config loaded from" file=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/conf/defaults.ini
+logger=settings t=2023-04-16T18:23:22.529134003+08:00 level=info msg="Path Home" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7
+logger=settings t=2023-04-16T18:23:22.52917514+08:00 level=info msg="Path Data" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data
+logger=settings t=2023-04-16T18:23:22.529219908+08:00 level=info msg="Path Logs" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/log
+logger=settings t=2023-04-16T18:23:22.529260416+08:00 level=info msg="Path Plugins" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/plugins
+logger=settings t=2023-04-16T18:23:22.529306791+08:00 level=info msg="Path Provisioning" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/conf/provisioning
+logger=settings t=2023-04-16T18:23:22.529362803+08:00 level=info msg="App mode production"
+logger=sqlstore t=2023-04-16T18:23:22.529523089+08:00 level=info msg="Connecting to DB" dbtype=sqlite3
+logger=migrator t=2023-04-16T18:23:22.569684544+08:00 level=info msg="Starting DB migrations"
+logger=migrator t=2023-04-16T18:23:22.583831941+08:00 level=info msg="migrations completed" performed=0 skipped=571 duration=3.226108ms
+logger=licensing t=2023-04-16T18:23:22.584944583+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=plugin.loader t=2023-04-16T18:23:22.705645316+08:00 level=info msg="Plugin registered" pluginID=input
+logger=plugin.finder t=2023-04-16T18:23:22.705972941+08:00 level=warn msg="Skipping finding plugins as directory does not exist" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/plugins
+logger=secrets t=2023-04-16T18:23:22.706344497+08:00 level=info msg="Envelope encryption state" enabled=true currentprovider=secretKey.v1
+logger=query_data t=2023-04-16T18:23:22.713078243+08:00 level=info msg="Query Service initialization"
+logger=live.push_http t=2023-04-16T18:23:22.730891539+08:00 level=info msg="Live Push Gateway initialization"
+logger=infra.usagestats.collector t=2023-04-16T18:23:24.609703394+08:00 level=info msg="registering usage stat providers" usageStatsProvidersLen=2
+logger=provisioning.alerting t=2023-04-16T18:23:24.610860455+08:00 level=info msg="starting to provision alerting"
+logger=provisioning.alerting t=2023-04-16T18:23:24.610950061+08:00 level=info msg="finished to provision alerting"
+logger=grafanaStorageLogger t=2023-04-16T18:23:24.61134669+08:00 level=info msg="storage starting"
+logger=ngalert.state.manager t=2023-04-16T18:23:24.611776912+08:00 level=info msg="Warming state cache for startup"
+logger=report t=2023-04-16T18:23:24.613412455+08:00 level=warn msg="Scheduling and sending of reports disabled, SMTP is not configured and enabled. Configure SMTP to enable."
+logger=http.server t=2023-04-16T18:23:24.615992252+08:00 level=info msg="HTTP Server Listen" address=[::]:3000 protocol=http subUrl= socket=
+logger=ngalert.state.manager t=2023-04-16T18:23:24.63229097+08:00 level=info msg="State cache has been initialized" states=0 duration=20.512381ms
+logger=ticker t=2023-04-16T18:23:24.63252815+08:00 level=info msg=starting first_tick=2023-04-16T18:23:30+08:00
+logger=ngalert.multiorg.alertmanager t=2023-04-16T18:23:24.63264702+08:00 level=info msg="starting MultiOrg Alertmanager"
+logger=context userId=1 orgId=1 uname=admin t=2023-04-16T18:23:35.379779754+08:00 level=info msg="Request Completed" method=GET path=/api/live/ws status=-1 remote_addr=[::1] time_ms=34 duration=34.203158ms size=0 referer= handler=/api/live/ws
+logger=cleanup t=2023-04-16T18:33:24.624596605+08:00 level=info msg="Completed cleanup jobs" duration=12.590373ms
+logger=cleanup t=2023-04-16T18:43:24.658718484+08:00 level=info msg="Completed cleanup jobs" duration=45.638793ms
+logger=cleanup t=2023-04-16T18:53:24.624455887+08:00 level=info msg="Completed cleanup jobs" duration=12.15271ms
+logger=cleanup t=2023-04-16T19:03:24.645188599+08:00 level=info msg="Completed cleanup jobs" duration=32.455985ms
+logger=cleanup t=2023-04-16T19:13:24.624282483+08:00 level=info msg="Completed cleanup jobs" duration=11.925372ms
+logger=licensing t=2023-04-16T19:23:24.622319282+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=licensing.renewal t=2023-04-16T19:23:24.622509603+08:00 level=warn msg="failed to load or validate token" err="license token file not found: /home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/license.jwt"
+logger=cleanup t=2023-04-16T19:23:24.633817765+08:00 level=info msg="Completed cleanup jobs" duration=21.440033ms
+logger=cleanup t=2023-04-16T19:33:24.624665848+08:00 level=info msg="Completed cleanup jobs" duration=12.451391ms
+logger=cleanup t=2023-04-16T19:43:24.624489536+08:00 level=info msg="Completed cleanup jobs" duration=12.200281ms
+logger=cleanup t=2023-04-16T19:53:24.644667468+08:00 level=info msg="Completed cleanup jobs" duration=31.894611ms
+logger=cleanup t=2023-04-16T20:03:24.643273294+08:00 level=info msg="Completed cleanup jobs" duration=30.515274ms
+logger=cleanup t=2023-04-16T20:13:24.62431293+08:00 level=info msg="Completed cleanup jobs" duration=12.031994ms
+logger=licensing t=2023-04-16T20:23:24.612902347+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=licensing.renewal t=2023-04-16T20:23:24.613052583+08:00 level=warn msg="failed to load or validate token" err="license token file not found: /home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/license.jwt"
+logger=cleanup t=2023-04-16T20:23:24.645178725+08:00 level=info msg="Completed cleanup jobs" duration=32.960438ms
+logger=cleanup t=2023-04-16T20:33:24.626352603+08:00 level=info msg="Completed cleanup jobs" duration=13.862665ms
+logger=cleanup t=2023-04-16T20:43:24.624292233+08:00 level=info msg="Completed cleanup jobs" duration=11.931713ms
+logger=cleanup t=2023-04-16T20:53:24.644025301+08:00 level=info msg="Completed cleanup jobs" duration=31.052306ms
+logger=cleanup t=2023-04-16T21:03:24.624124417+08:00 level=info msg="Completed cleanup jobs" duration=12.028457ms
+logger=cleanup t=2023-04-16T21:13:24.644703564+08:00 level=info msg="Completed cleanup jobs" duration=31.981762ms
+logger=licensing t=2023-04-16T21:23:24.61301703+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=licensing.renewal t=2023-04-16T21:23:24.613205251+08:00 level=warn msg="failed to load or validate token" err="license token file not found: /home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/license.jwt"
+logger=cleanup t=2023-04-16T21:23:24.64294336+08:00 level=info msg="Completed cleanup jobs" duration=30.604203ms
+logger=cleanup t=2023-04-16T21:33:24.624277342+08:00 level=info msg="Completed cleanup jobs" duration=12.096411ms
+logger=cleanup t=2023-04-16T21:43:24.624392718+08:00 level=info msg="Completed cleanup jobs" duration=12.073949ms
+logger=cleanup t=2023-04-16T21:53:24.644431513+08:00 level=info msg="Completed cleanup jobs" duration=32.164672ms
+logger=cleanup t=2023-04-16T22:03:24.644247395+08:00 level=info msg="Completed cleanup jobs" duration=32.141313ms
+logger=cleanup t=2023-04-16T22:13:24.624104149+08:00 level=info msg="Completed cleanup jobs" duration=12.028574ms
+logger=licensing t=2023-04-16T22:23:24.634032534+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=licensing.renewal t=2023-04-16T22:23:24.634249459+08:00 level=warn msg="failed to load or validate token" err="license token file not found: /home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/license.jwt"
+logger=cleanup t=2023-04-16T22:23:24.637029818+08:00 level=info msg="Completed cleanup jobs" duration=24.746308ms
+logger=context userId=1 orgId=1 uname=admin t=2023-04-16T22:30:45.881807502+08:00 level=info msg="Request Completed" method=GET path=/api/live/ws status=-1 remote_addr=[::1] time_ms=33 duration=33.197929ms size=0 referer= handler=/api/live/ws
+logger=server t=2023-04-16T22:30:58.756769895+08:00 level=info msg="Shutdown started" reason="System signal: interrupt"
+logger=tracing t=2023-04-16T22:30:58.757054027+08:00 level=info msg="Closing tracing"
+logger=ticker t=2023-04-16T22:30:58.757227664+08:00 level=info msg=stopped last_tick=2023-04-16T22:30:50+08:00

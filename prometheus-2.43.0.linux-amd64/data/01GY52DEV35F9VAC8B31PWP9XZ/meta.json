@@ -1,0 +1,17 @@
+{
+	"ulid": "01GY52DEV35F9VAC8B31PWP9XZ",
+	"minTime": 1681639206872,
+	"maxTime": 1681646400000,
+	"stats": {
+		"numSamples": 294237,
+		"numSeries": 871,
+		"numChunks": 2804
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GY52DEV35F9VAC8B31PWP9XZ"
+		]
+	},
+	"version": 1
+}
