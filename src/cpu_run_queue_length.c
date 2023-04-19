@@ -14,7 +14,13 @@
 #include "cpu_run_queue_length.skel.h"
 #include "btf_helpers.h"
 #include "trace_helpers.h"
-#include "utils.h"
+#include "syscall_helpers.h"
+
+static volatile bool exiting;
+static void sig_handler(int sig)
+{
+	exiting = true;
+}
 
 struct env {
     bool verbose;
