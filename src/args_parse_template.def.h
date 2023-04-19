@@ -29,6 +29,8 @@ const char argp_program_doc[] =
 // };
 static const struct argp_option opts[] = {
 	{ "Desc.", 'd', NULL, 0, "doc..." },
+	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
+	{},
 };
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
