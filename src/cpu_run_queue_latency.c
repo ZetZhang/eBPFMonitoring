@@ -26,7 +26,7 @@ struct env {
     time_t interval;
 	pid_t pid;
 	int times;
-	// bool milliseconds;
+	bool milliseconds;
 	// bool per_process;
 	// bool per_thread;
 	// bool per_pidns;
@@ -95,6 +95,7 @@ int main(int argc, char const *argv[])
 
     struct cpu_run_queue_latency_bpf *obj;
     int err;
+	int cgfd = -1;
 
     // argp parse
 	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
@@ -117,9 +118,66 @@ int main(int argc, char const *argv[])
     }
 
     // bpf rodata: set global data
-    
+    // obj->rodata->targ_per_process = env.per_process;
+	// obj->rodata->targ_per_thread = env.per_thread;
+	// obj->rodata->targ_per_pidns = env.per_pidns;
+	obj->rodata->targ_ms = env.milliseconds;
+	obj->rodata->targ_tgid = env.pid;
+	// obj->rodata->filter_cg = env.cg;
+
+	// set auto load
+	if (probe_tp_btf("sched_wakeup")) {
+		bpf_program__set_autoload(obj->progs.handle_sched_wakeup, false);
+		bpf_program__set_autoload(obj->progs.handle_sched_wakeup_new, false);
+		bpf_program__set_autoload(obj->progs.handle_sched_switch, false);
+	} else {
+		bpf_program__set_autoload(obj->progs.sched_wakeup, false);
+		bpf_program__set_autoload(obj->progs.sched_wakeup_new, false);
+		bpf_program__set_autoload(obj->progs.sched_switch, false);
+	}
+
+	// bpf load
+	if ((err = cpu_run_queue_latency_bpf__load(obj))) {
+		fprintf(stderr, "failed to load BPF object: %d\n", err);
+		goto cleanup;
+	}
+
+	// cgroup
+	// if (env.cg) {
+
+	// }
+
+	// bpf attach
+	if ((err = cpu_run_queue_latency_bpf__attach(obj))) {
+		fprintf(stderr, "failed to attach BPF programs\n");
+		goto cleanup;
+	}
+
+	printf("[sampling run queue latency...]\n");
+
+	// signal
+	signla(SIGINT, sig_handler);
+
+	// main poll
+	for (;;) {
+		sleep(env.interval);
+		print("\n");
+
+		// if (env.timestamp) {
+			
+		// }
+
+		if ((err = print_log2_hists(obj->maps.hists)))
+			break;
+
+		if (existing || --env.times == 0)
+			break;
+	}
 
 cleanup:
+	cpu_run_queue_latency_bpf__destroy(obj);
+	if (cgfd > 0)
+		close(cgfd);
 
-    return 0;
+    return err != 0;
 }
