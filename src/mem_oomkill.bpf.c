@@ -3,35 +3,23 @@
 #include <bpf/bpf_tracing.h>
 #include <bpf/bpf_core_read.h>
 
-struct {
-    __uint(type, BPF_MAP_TYPE_RINGBUF);
-	__uint(max_entries, 256 * 1024 /* 256 KB */);
-} rb SEC(".maps");
-
-struct data_t {
-    u64 cgroup_id;
-    u8 global_oom;
-};
+#include "compat.bpf.h"
+#include "mem_oomkill.h"
 
 SEC("kprobe/oom_kill_process")
 int BPF_KPROBE(kprobe__oom_kill_process, struct oom_control *oc, const char *message)
 {
     struct data_t *data = NULL;
 
-    data = bpf_ringbuf_reserve(&rb, sizeof(*data), 0);
-    if (!data)
-		return 0;
-
-    struct mem_cgroup *mcg = BPF_CORE_READ(oc, memcg);
-    if (!mcg) {
-        data->global_oom = 1;
-        bpf_ringbuf_submit(data, 0);
+    if (!(data = reserve_buf(sizeof(*data))))
         return 0;
-    }
 
-    data->cgroup_id = BPF_CORE_READ(mcg, css.cgroup, kn, id);
-
-    bpf_ringbuf_submit(data, 0);
+    data->fpid = bpf_get_current_pid_tgid() >> 32;
+	data->tpid = BPF_CORE_READ(oc, chosen, tgid);
+	data->pages = BPF_CORE_READ(oc, totalpages);
+    bpf_get_current_comm(&data->fcomm, sizeof(data->fcomm));
+    bpf_probe_read_kernel(&data->tcomm, sizeof(data->tcomm), BPF_CORE_READ(oc, chosen, comm));
+	submit_buf(ctx, data, sizeof(*data));
 
     return 0;
 }
