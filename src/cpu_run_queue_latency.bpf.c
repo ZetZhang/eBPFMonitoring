@@ -54,6 +54,21 @@ static int trace_enqueue(u32 tgid, u32 pid)
 	return 0;
 }
 
+static unsigned int pid_namespace(struct task_struct *task)
+{
+	struct pid *pid;
+	unsigned int level;
+	struct upid upid;
+	unsigned int inum;
+
+	pid = BPF_CORE_READ(task, thread_pid);
+	level = BPF_CORE_READ(pid, level);
+	bpf_core_read(&upid, sizeof(upid), &pid->numbers[level]);
+	inum = BPF_CORE_READ(upid.ns, ns.inum);
+
+	return inum;
+}
+
 // switch
 static int handle_switch(bool preempt, struct task_struct *prev, struct task_struct *next)
 {
@@ -73,7 +88,7 @@ static int handle_switch(bool preempt, struct task_struct *prev, struct task_str
     if (!(tsp = bpf_map_lookup_elem(&start, &pid)))
         return 0;
 
-    if ((delta = bpk_ktime__get_ns() - *tsp) < 0)
+    if ((delta = bpf_ktime_get_ns() - *tsp) < 0)
         goto cleanup;
 
     if (targ_per_process)
@@ -84,12 +99,13 @@ static int handle_switch(bool preempt, struct task_struct *prev, struct task_str
 		hkey = pid_namespace(next);
 	else
 		hkey = -1;
+
 	histp = bpf_map_lookup_or_try_init(&hists, &hkey, &zero);
 	if (!histp)
 		goto cleanup;
 	if (!histp->comm[0])
-		bpf_probe_read_kernel_str(&histp->comm, sizeof(histp->comm),
-					next->comm);
+		bpf_probe_read_kernel_str(&histp->comm, sizeof(histp->comm), next->comm);
+
 	if (targ_ms)
 		delta /= 1000000U;
 	else
@@ -97,6 +113,7 @@ static int handle_switch(bool preempt, struct task_struct *prev, struct task_str
 	slot = log2l(delta);
 	if (slot >= MAX_SLOTS)
 		slot = MAX_SLOTS - 1;
+
 	__sync_fetch_and_add(&histp->slots[slot], 1);
 
 cleanup:
@@ -104,21 +121,33 @@ cleanup:
     return 0;
 }
 
+SEC("tp_btf/sched_wakeup")
+int BPF_PROG(sched_wakeup, struct task_struct *p)
+{
+	return trace_enqueue(p->tgid, p->pid);
+}
+
+SEC("tp_btf/sched_wakeup_new")
+int BPF_PROG(sched_wakeup_new, struct task_struct *p)
+{
+	return trace_enqueue(p->tgid, p->pid);
+}
+
+SEC("tp_btf/sched_switch")
+int BPF_PROG(sched_switch, bool preempt, struct task_struct *prev, struct task_struct *next)
+{
+	return handle_switch(preempt, prev, next);
+}
+
 SEC("raw_tp/sched_wakeup")
 int BPF_PROG(handle_sched_wakeup, struct task_struct *p)
 {
-	// if (filter_cg && !bpf_current_task_under_cgroup(&cgroup_map, 0))
-	// 	return 0;
-
 	return trace_enqueue(BPF_CORE_READ(p, tgid), BPF_CORE_READ(p, pid));
 }
 
 SEC("raw_tp/sched_wakeup_new")
 int BPF_PROG(handle_sched_wakeup_new, struct task_struct *p)
 {
-	// if (filter_cg && !bpf_current_task_under_cgroup(&cgroup_map, 0))
-	// 	return 0;
-
 	return trace_enqueue(BPF_CORE_READ(p, tgid), BPF_CORE_READ(p, pid));
 }
 

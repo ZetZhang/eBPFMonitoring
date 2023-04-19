@@ -26,12 +26,12 @@ struct env {
     time_t interval;
 	pid_t pid;
 	int times;
+	bool verbose;
 	bool milliseconds;
-	// bool per_process;
-	// bool per_thread;
-	// bool per_pidns;
+	bool per_process;
+	bool per_thread;
+	bool per_pidns;
 	// bool timestamp;
-	// bool verbose;
 	// char *cgroupspath;
 	// bool cg;
 } env = {
@@ -81,12 +81,41 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 
 static int print_log2_hists(struct bpf_map *hists)
 {
-    return 0;
+    const char *units = env.milliseconds ? "msecs" : "usecs";
+	int err, fd = bpf_map__fd(hists);
+	__u32 lookup_key = -2, next_key;
+	struct hist hist;
+
+	while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
+		err = bpf_map_lookup_elem(fd, &next_key, &hist);
+		if (err < 0) {
+			fprintf(stderr, "failed to lookup hist: %d\n", err);
+			return -1;
+		}
+		if (env.per_process)
+			printf("\npid = %d %s\n", next_key, hist.comm);
+		else if (env.per_thread)
+			printf("\ntid = %d %s\n", next_key, hist.comm);
+		else if (env.per_pidns)
+			printf("\npidns = %u %s\n", next_key, hist.comm);
+		print_log2_hist(hist.slots, MAX_SLOTS, units);
+		lookup_key = next_key;
+	}
+
+	lookup_key = -2;
+	while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
+		err = bpf_map_delete_elem(fd, &next_key);
+		if (err < 0) {
+			fprintf(stderr, "failed to cleanup hist : %d\n", err);
+			return -1;
+		}
+		lookup_key = next_key;
+	}
+	return 0;
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-    int err;
     static const struct argp argp = {
 		.options = opts,
 		.parser = parse_arg,
@@ -102,11 +131,10 @@ int main(int argc, char const *argv[])
 		return err;
 
     // check
-    // if ((env.per_thread && (env.per_process || env.per_pidns)) ||
-	// 	(env.per_process && env.per_pidns)) {
-	// 	fprintf(stderr, "pidnss, pids, tids cann't be used together.\n");
-	// 	return EXIT_FAILURE;
-	// }
+    if ((env.per_thread && (env.per_process || env.per_pidns)) || (env.per_process && env.per_pidns)) {
+		fprintf(stderr, "pidnss, pids, tids cann't be used together.\n");
+		return EXIT_FAILURE;
+	}
 
     // set print
     libbpf_set_print(libbpf_print_fn);
@@ -118,9 +146,9 @@ int main(int argc, char const *argv[])
     }
 
     // bpf rodata: set global data
-    // obj->rodata->targ_per_process = env.per_process;
-	// obj->rodata->targ_per_thread = env.per_thread;
-	// obj->rodata->targ_per_pidns = env.per_pidns;
+    obj->rodata->targ_per_process = env.per_process;
+	obj->rodata->targ_per_thread = env.per_thread;
+	obj->rodata->targ_per_pidns = env.per_pidns;
 	obj->rodata->targ_ms = env.milliseconds;
 	obj->rodata->targ_tgid = env.pid;
 	// obj->rodata->filter_cg = env.cg;
@@ -156,21 +184,21 @@ int main(int argc, char const *argv[])
 	printf("[sampling run queue latency...]\n");
 
 	// signal
-	signla(SIGINT, sig_handler);
+	signal(SIGINT, sig_handler);
 
 	// main poll
 	for (;;) {
 		sleep(env.interval);
-		print("\n");
+		printf("\n");
 
 		// if (env.timestamp) {
-			
+
 		// }
 
 		if ((err = print_log2_hists(obj->maps.hists)))
 			break;
 
-		if (existing || --env.times == 0)
+		if (exiting || --env.times == 0)
 			break;
 	}
 

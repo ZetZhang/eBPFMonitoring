@@ -32,6 +32,7 @@ APPS = \
 	cache_ref_n_miss \
 	runqlen \
 	cpu_run_queue_length \
+	cpu_run_queue_latency \
 
 COMMON_OBJ = \
 	$(OUTPUT)/trace_helpers.o \
