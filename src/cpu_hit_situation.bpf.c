@@ -6,47 +6,49 @@
 
 const volatile bool targ_per_thread = false;
 
-struct key_t {
-    int cpu;
-    u32 pid;
-    u32 tid;
-    char name[TASK_COMM_LEN];
-};
-
 struct {
-    __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 10240);
-    __type(key, u32);
-    __type(value, key_t);
-} ref_count SEC(".maps");
+	__uint(type, BPF_MAP_TYPE_HASH);
+	__uint(max_entries, MAX_ENTRIES);
+	__type(key, struct key_info);
+	__type(value, struct value_info);
+} infos SEC(".maps");
 
-struct {
-    __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 10240);
-    __type(key, u32);
-    __type(value, key_t);
-} miss_count SEC(".maps");
+static __always_inline
+int trace_event(__u64 sample_period, bool miss)
+{
+	struct key_info key = {};	
+	struct value_info *infop, zero = {};
 
-static inline __attribute__((always_inline)) void get_key(struct key_t* key) {
-    u64 pid_tgid = bpf_get_current_pid_tgid();
-    key->cpu = bpf_get_smp_processor_id();
-    key->pid = pid_tgid >> 32;
-    key->tid = key->pid;
-    bpf_get_current_comm(&(key->name), sizeof(key->name));
+	u64 pid_tgid = bpf_get_current_pid_tgid();
+	key.cpu = bpf_get_smp_processor_id();
+	key.pid = pid_tgid >> 32;
+	if (targ_per_thread)
+		key.tid = (u32)pid_tgid;
+	else
+		key.tid = key.pid;
+
+	infop = bpf_map_lookup_or_try_init(&infos, &key, &zero);
+	if (!infop)
+		return 0;
+	if (miss)
+		infop->miss += sample_period;
+	else
+		infop->ref += sample_period;
+	bpf_get_current_comm(infop->comm, sizeof(infop->comm));
+
+	return 0;
 }
 
 SEC("perf_event")
-int on_cache_miss(struct bpf_perf_event_data *ctx) {
-    struct key_t key = {};
-    get_key(&key);
-    // miss_count.increment(key, ctx->sample_period);
-    return 0;
+int on_cache_miss(struct bpf_perf_event_data *ctx)
+{
+	return trace_event(ctx->sample_period, true);
 }
 
 SEC("perf_event")
-int on_cache_ref(struct bpf_perf_event_data *ctx) {
-    struct key_t key = {};
-    get_key(&key);
-    // ref_count.increment(key, ctx->sample_period);
-    return 0;
+int on_cache_ref(struct bpf_perf_event_data *ctx)
+{
+	return trace_event(ctx->sample_period, false);
 }
+
+char LICENSE[] SEC("license") = "GPL";
