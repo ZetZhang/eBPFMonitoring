@@ -19,7 +19,7 @@ INCLUDES := -I$(OUTPUT) -I../libbpf/include/uapi -I$(dir $(VMLINUX))
 CFLAGS := -g -Wall
 ALL_LDFLAGS := $(LDFLAGS) $(EXTRA_LDFLAGS)
 
-APPS = \
+SCRAP = \
 	bootstrap \
 	claimed \
 	perfbuf-output \
@@ -31,13 +31,17 @@ APPS = \
 	runqueue_latency \
 	cache_ref_n_miss \
 	runqlen \
+
+APPS = \
+	$(SCRAP) \
+	cpu_dist \
+	cpu_hit_situation \
 	cpu_run_queue_length \
 	cpu_run_queue_latency \
-	cpu_hit_situation \
 	mem_oomkill \
+	vfs_iostat \
 	vfs_cache_readahead \
 	bio_scheduler_latency \
-	cpu_dist \
 
 COMMON_OBJ = \
 	$(OUTPUT)/trace_helpers.o \
