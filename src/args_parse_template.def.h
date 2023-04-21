@@ -10,7 +10,18 @@ struct env {
 	.times = 99999999,
 };
 
+static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
+{
+	if (level == LIBBPF_DEBUG && !env.verbose)
+		return 0;
+	return vfprintf(stderr, format, args);
+}
+
 static volatile bool exiting;
+static void sig_handler(int sig)
+{
+	exiting = true;
+}
 
 const char argp_program_doc[] =
 "ebpf_program Description...\n"
@@ -59,14 +70,32 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 int main(int argc, char *argv[])
 {
     /* code */
-    int err;
     static const struct argp argp = {
 		.options = opts,
 		.parser = parse_arg,
 		.doc = argp_program_doc,
 	};
+    int err;
 
+	// argp parse
 	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
 		return err;
     return 0;
+
+	// set print
+	libbpf_set_print(libbpf_print_fn);
+
+
+	// signal
+    signal(SIGINT, sig_handler);
+
+	print("[ ...]\n");
+
+	sleep(env.duration);
+	printf("\n");
+
+cleanup:
+	
+
+	return err != 0;
 }
