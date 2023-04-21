@@ -85,6 +85,13 @@ int main(int argc, char *argv[])
 	// set print
 	libbpf_set_print(libbpf_print_fn);
 
+	// bpf open
+
+	// set bpf global
+
+	// bpf load
+
+	// bpf attach
 
 	// signal
     signal(SIGINT, sig_handler);
@@ -95,7 +102,7 @@ int main(int argc, char *argv[])
 	printf("\n");
 
 cleanup:
-	
+
 
 	return err != 0;
 }
