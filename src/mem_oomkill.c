@@ -166,9 +166,11 @@ int main(int argc, char *argv[])
 
     printf("[Tracing OOM kills...]\n");
 
-    for (;;) {
-        
-    }
+    for (;; err = 0)
+		if ((err = bpf_buffer__poll(buf, POLL_TIMEOUT_MS)) < 0 && err != -EINTR) {
+			fprintf(stderr, "error polling ring/perf buffer: %d\n", err);
+			goto cleanup;
+		}
 
 cleanup:
     bpf_buffer__free(buf);
