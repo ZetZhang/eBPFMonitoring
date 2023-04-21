@@ -33,6 +33,8 @@ APPS = \
 	runqlen \
 	cpu_run_queue_length \
 	cpu_run_queue_latency \
+	mem_oomkill \
+	vfs_cache_readahead \
 
 COMMON_OBJ = \
 	$(OUTPUT)/trace_helpers.o \
