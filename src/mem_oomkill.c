@@ -88,8 +88,6 @@ static void handle_lost_events(void *ctx, int cpu, __u64 lost_cnt)
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	static int pos_args;
-
 	switch (key) {
 	case 'v':
         verbose = true;
@@ -135,20 +133,20 @@ int main(int argc, char *argv[])
     }
 
     // new buffer
-    if (!(buf = buf_buffer__new(obj->maps.events, obj->maps.heap))) {
+    if (!(buf = bpf_buffer__new(obj->maps.events, obj->maps.heap))) {
 		err = -errno;
 		fprintf(stderr, "failed to create ring/perf buffer: %d\n", err);
         goto cleanup;
     }
 
     // bpf load
-    if ((err = oomkill_bpf__load(obj))) {
+    if ((err = mem_oomkill_bpf__load(obj))) {
 		fprintf(stderr, "failed to load BPF object: %d\n", err);
         goto cleanup;
     }
 
     // bpf attach
-    if ((err = oomkill_bpf__attach(obj))) {
+    if ((err = mem_oomkill_bpf__attach(obj))) {
 		fprintf(stderr, "failed to attach BPF programs\n");
         goto cleanup;
     }
@@ -160,7 +158,7 @@ int main(int argc, char *argv[])
     }
 
     // signal
-    if (signal(SIGINT, sig_int) == SIG_ERR) {
+    if (signal(SIGINT, sig_handler) == SIG_ERR) {
 		fprintf(stderr, "can't set signal handler: %d\n", err);
 		err = 1;
         goto cleanup;
