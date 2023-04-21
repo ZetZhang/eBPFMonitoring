@@ -37,6 +37,7 @@ APPS = \
 	mem_oomkill \
 	vfs_cache_readahead \
 	bio_scheduler_latency \
+	cpu_dist \
 
 COMMON_OBJ = \
 	$(OUTPUT)/trace_helpers.o \
