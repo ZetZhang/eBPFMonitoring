@@ -9,19 +9,11 @@
 #include "maps.bpf.h"
 #include "core_fixes.bpf.h"
 
-// const volatile bool filter_cg = false;
 const volatile bool targ_per_process = false;
 const volatile bool targ_per_thread = false;
 const volatile bool targ_per_pidns = false;
 const volatile bool targ_ms = false;
 const volatile pid_t targ_tgid = 0;
-
-// struct {
-// 	__uint(type, BPF_MAP_TYPE_CGROUP_ARRAY);
-// 	__type(key, u32);
-// 	__type(value, u32);
-// 	__uint(max_entries, 1);
-// } cgroup_map SEC(".maps");
 
 struct {
 	__uint(type, BPF_MAP_TYPE_HASH);
@@ -76,9 +68,6 @@ static int handle_switch(bool preempt, struct task_struct *prev, struct task_str
     u64 *tsp, slot;
 	u32 pid, hkey;
 	s64 delta;
-
-    // if (filter_cg && !bpf_current_task_under_cgroup(&cgroup_map, 0))
-    // return 0;
 
     if (get_task_state(prev) == TASK_RUNNING)
 		trace_enqueue(BPF_CORE_READ(prev, tgid), BPF_CORE_READ(prev, pid));

@@ -32,8 +32,6 @@ struct env {
 	bool per_thread;
 	bool per_pidns;
 	// bool timestamp;
-	// char *cgroupspath;
-	// bool cg;
 } env = {
 	.interval = 99999999,
 	.times = 99999999,
