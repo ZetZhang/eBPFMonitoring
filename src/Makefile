@@ -33,6 +33,7 @@ APPS = \
 	runqlen \
 	cpu_run_queue_length \
 	cpu_run_queue_latency \
+	cpu_hit_situation \
 	mem_oomkill \
 	vfs_cache_readahead \
 

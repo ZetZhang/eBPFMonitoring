@@ -48,8 +48,6 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	static int pos_args;
-
 	switch (key) {
 	case 'd':
 		errno = 0;
@@ -96,14 +94,14 @@ int main(int argc, char *argv[])
     int err;
 
     // argp parse
-	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
+	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
 		return err;
 
     // set print
 	libbpf_set_print(libbpf_print_fn);
 
     // bpf open
-    if (!(obj = readahead_bpf__open())) {
+    if (!(obj = vfs_cache_readahead_bpf__open())) {
 		fprintf(stderr, "failed to open BPF object\n");
 		return EXIT_FAILURE;
     }
@@ -117,7 +115,7 @@ int main(int argc, char *argv[])
         goto cleanup;
 
     // bpf load
-    if ((err = readahead_bpf__load(obj))) {
+    if ((err = vfs_cache_readahead_bpf__load(obj))) {
         fprintf(stderr, "failed to load BPF object\n");
         goto cleanup;
     }
@@ -129,7 +127,7 @@ int main(int argc, char *argv[])
     }
 
     // bpf attach
-    if ((err = readahead_bpf__attach(obj))) {
+    if ((err = vfs_cache_readahead_bpf__attach(obj))) {
         fprintf(stderr, "failed to attach BPF programs\n");
         goto cleanup;
     }
