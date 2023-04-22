@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     int err;
 
 	// argp parse
-	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
+	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
 		return err;
     return 0;
 
