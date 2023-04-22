@@ -62,7 +62,7 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	static int pos_args;
+	// static int pos_args;
 
 	switch (key) {
 	case 'O':
@@ -89,13 +89,48 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 static int get_pid_max(void)
 {
     int pid_max;
+	FILE *f;
 
-    return pid_max;
+	f = fopen("/proc/sys/kernel/pid_max", "r");
+	if (!f)
+		return -1;
+	if (fscanf(f, "%d\n", &pid_max) != 1)
+		pid_max = -1;
+	fclose(f);
+	return pid_max;
 }
 
 static int print_log2_hists(int fd)
 {
-    return 0;
+    char *units = env.milliseconds ? "msecs" : "usecs";
+	__u32 lookup_key = -2, next_key;
+	struct hist hist;
+	int err;
+
+	while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
+		err = bpf_map_lookup_elem(fd, &next_key, &hist);
+		if (err < 0) {
+			fprintf(stderr, "failed to lookup hist: %d\n", err);
+			return -1;
+		}
+		// if (env.per_process)
+		// 	printf("\npid = %d %s\n", next_key, hist.comm);
+		// if (env.per_thread)
+		// 	printf("\ntid = %d %s\n", next_key, hist.comm);
+		print_log2_hist(hist.slots, MAX_SLOTS, units);
+		lookup_key = next_key;
+	}
+
+	lookup_key = -2;
+	while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
+		err = bpf_map_delete_elem(fd, &next_key);
+		if (err < 0) {
+			fprintf(stderr, "failed to cleanup hist : %d\n", err);
+			return -1;
+		}
+		lookup_key = next_key;
+	}
+	return 0;
 }
 
 int main(int argc, char *argv[])
@@ -109,12 +144,11 @@ int main(int argc, char *argv[])
     struct tm *tm;
     char ts[32];
     time_t t;
-    int err, pid_ax, fd, err;
+    int err, pid_max, fd;
 
 	// argp parse
-	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
+	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
 		return err;
-    return 0;
 
 	// set print
 	libbpf_set_print(libbpf_print_fn);
@@ -139,34 +173,36 @@ int main(int argc, char *argv[])
 
     if((pid_max = get_pid_max()) < 0) {
         fprintf(stderr, "failed to get pid_max\n");
-        return EXIT_FAILURE:
+        return EXIT_FAILURE;
     }
 
     bpf_map__set_max_entries(obj->maps.start, pid_max);
-	if (!env.per_process && !env.per_thread)
-		bpf_map__set_max_entries(obj->maps.hists, 1);
-	else
+	// if (!env.per_process && !env.per_thread)
+	// 	bpf_map__set_max_entries(obj->maps.hists, 1);
+	// else
 		bpf_map__set_max_entries(obj->maps.hists, pid_max);
 
 	// bpf load
-    if ((err = cpudist_bpf__load(obj))) {
+    if ((err = cpu_dist_bpf__load(obj))) {
         fprintf(stderr, "failed to load BPF object: %d\n", err);
         goto cleanup;
     }
 
 	// bpf attach
-    if ((err = cpudist_bpf__attach(obj))) {
+    if ((err = cpu_dist_bpf__attach(obj))) {
         fprintf(stderr, "failed to attach BPF programs\n");
         goto cleanup;
     }
 
+	fd = bpf_map__fd(obj->maps.hists);
+
 	// signal
     signal(SIGINT, sig_handler);
 
-	print("[Tracing %s-CPU time...]\n", env.offcpu ? "off" : "on");
+	printf("[Tracing %s-CPU time...]\n", env.offcpu ? "off" : "on");
 
     for (;;) {
-        sleep(env.duration);
+        sleep(env.interval);
         printf("\n");
 
         if (env.timestamp) {
@@ -174,12 +210,12 @@ int main(int argc, char *argv[])
 			tm = localtime(&t);
 			strftime(ts, sizeof(ts), "%H:%M:%S", tm);
 			printf("%-8s\n", ts);
-
-            if ((err = print_log2_hists(fd)))
-                break;
-            if (exiting || --env.times == 0)
-                break;
 		}
+
+		if ((err = print_log2_hists(fd)))
+			break;
+		if (exiting || --env.times == 0)
+			break;
     }
 
 cleanup:
@@ -187,4 +223,3 @@ cleanup:
 
 	return err != 0;
 }
-s
