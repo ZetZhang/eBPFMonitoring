@@ -54,7 +54,7 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	static int pos_args;
+	// static int pos_args;
 
 	switch (key) {
 	case ARGP_KEY_ARG:
@@ -104,7 +104,9 @@ static void print_map(struct bpf_map *map)
 {
     __u64 total_ref = 0, total_miss = 0, total_hit, hit;
     __u32 pid, cpu, tid;
-    struct key_info lookup_key = { .cpu = -1 }, next_eky;
+    struct key_info lookup_key = { .cpu = -1 }, next_key;
+	int err, fd = bpf_map__fd(map);
+	struct value_info info;
 
     while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
 		if ((err = bpf_map_lookup_elem(fd, &next_key, &info)) < 0) {
@@ -147,12 +149,11 @@ int main(int argc, char *argv[])
 		.doc = argp_program_doc,
 	};
     struct cpu_hit_situation_bpf *obj;
-    struct bpf_link **rlinks = NULL;
-    struct **mlinks = NULL;
+    struct bpf_link **rlinks = NULL, **mlinks = NULL;
     int err;
 
     // argp parse
-	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
+	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
 		return err;
 
     // set print
@@ -216,7 +217,7 @@ int main(int argc, char *argv[])
     print_map(obj->maps.infos);
 
 cleanup:
-    for (i = 0; i < nr_cpus; i++) {
+    for (int i = 0; i < nr_cpus; i++) {
 		bpf_link__destroy(mlinks[i]);
 		bpf_link__destroy(rlinks[i]);
 	}
