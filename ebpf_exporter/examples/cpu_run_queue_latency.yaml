@@ -1,0 +1,17 @@
+metrics:
+  histograms:
+    - name: hists
+      help: Summarize run queue latency as a histogram.
+      bucket_type: exp2
+      bucket_min: 0
+      bucket_max: 27
+      bucket_multiplier: 0.000001 # microseconds to seconds
+      labels:
+        - name: slots
+          size: 104
+          decoders:
+            - name: 
+        - name: comm
+          size: 16
+          decoders:
+            - name: string
