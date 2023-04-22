@@ -6,3 +6,12 @@ grafana
 app
 lib
 .output
+
+bio_scheduler_latency
+cpu_dist
+cpu_hit_situation
+cpu_run_queue_latency
+cpu_run_queue_length
+mem_oomkill
+vfs_cache_readahead
+vfs_iostat
