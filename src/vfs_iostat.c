@@ -16,6 +16,24 @@ struct env {
 	.interval = 1,
 };
 
+static const char *strftime_now(char *s, size_t max, const char *format)
+{
+	struct tm *tm;
+	time_t t;
+
+	t = time(NULL);
+	tm = localtime(&t);
+	if (tm == NULL) {
+		fprintf(stderr, "localtime: %s\n", strerror(errno));
+		return "<failed>";
+	}
+	if (strftime(s, max, format, tm) == 0) {
+		fprintf(stderr, "strftime error\n");
+		return "<failed>";
+	}
+	return s;
+}
+
 static const char *stat_types_names[] = {
 	[S_READ] = "READ",
 	[S_WRITE] = "WRITE",
@@ -48,7 +66,9 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	static int pos_args;
+	// static int pos_args;
+	long interval;
+	long count;
 
 	switch (key) {
 	case ARGP_KEY_ARG:
@@ -121,9 +141,8 @@ int main(int argc, char *argv[])
     int err;
 
 	// argp parse
-	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
+	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
 		return err;
-    return 0;
 
 	// set print
 	libbpf_set_print(libbpf_print_fn);
@@ -135,25 +154,25 @@ int main(int argc, char *argv[])
     }
 
 	// bpf open
-    if (!(skel = vfs_iostat__open())) {
+    if (!(skel = vfs_iostat_bpf__open())) {
         fprintf(stderr, "failed to open BPF skelect\n");
         return EXIT_FAILURE;
     }
 
 	// set bpf global
-    // if (fentry_can_attach("vfs_read", NULL)) {
-		// bpf_program__set_autoload(skel->progs.kprobe_vfs_read, false);
-		// bpf_program__set_autoload(skel->progs.kprobe_vfs_write, false);
-		// bpf_program__set_autoload(skel->progs.kprobe_vfs_fsync, false);
-		// bpf_program__set_autoload(skel->progs.kprobe_vfs_open, false);
-		// bpf_program__set_autoload(skel->progs.kprobe_vfs_create, false);
-	// } else {
+    if (fentry_can_attach("vfs_read", NULL)) {
+		bpf_program__set_autoload(skel->progs.kprobe_vfs_read, false);
+		bpf_program__set_autoload(skel->progs.kprobe_vfs_write, false);
+		bpf_program__set_autoload(skel->progs.kprobe_vfs_fsync, false);
+		bpf_program__set_autoload(skel->progs.kprobe_vfs_open, false);
+		bpf_program__set_autoload(skel->progs.kprobe_vfs_create, false);
+	} else {
 		bpf_program__set_autoload(skel->progs.fentry_vfs_read, false);
 		bpf_program__set_autoload(skel->progs.fentry_vfs_write, false);
 		bpf_program__set_autoload(skel->progs.fentry_vfs_fsync, false);
 		bpf_program__set_autoload(skel->progs.fentry_vfs_open, false);
 		bpf_program__set_autoload(skel->progs.fentry_vfs_create, false);
-	// }
+	}
 
 	// bpf load
     if ((err = vfs_iostat_bpf__load(skel))) {
@@ -167,7 +186,7 @@ int main(int argc, char *argv[])
 	}
 
 	// bpf attach
-    if ((err = vfs_iostst_bpf__attach(skel))) {
+    if ((err = vfs_iostat_bpf__attach(skel))) {
         fprintf(stderr, "failed to attach BPF programs: %s\n", strerror(-err));
 		goto cleanup;
     }
