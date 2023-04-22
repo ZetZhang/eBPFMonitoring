@@ -61,7 +61,7 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	static int pos_args;
+	// static int pos_args;
 
 	switch (key) {
 	case 'd':
@@ -179,9 +179,8 @@ int main(int argc, char *argv[])
     int err;
 
 	// argp parse
-	if (err = argp_parse(&argp, argc, argv, 0, NULL, NULL))
+	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
 		return err;
-    return 0;
 
 	// set print
 	libbpf_set_print(libbpf_print_fn);
@@ -210,11 +209,20 @@ int main(int argc, char *argv[])
 	obj->rodata->targ_per_flag = env.per_flag;
 	obj->rodata->targ_ms = env.milliseconds;
 	obj->rodata->targ_queued = env.queued;
-    bpf_program__set_autoload(obj->progs.block_rq_insert, false);
-    bpf_program__set_autoload(obj->progs.block_rq_issue, false);
-    bpf_program__set_autoload(obj->progs.block_rq_complete, false);
-    if (!env.queued)
-        bpf_program__set_autoload(obj->progs.block_rq_insert_btf, false);
+	
+    if (probe_tp_btf("block_rq_insert")) {
+		bpf_program__set_autoload(obj->progs.block_rq_insert, false);
+		bpf_program__set_autoload(obj->progs.block_rq_issue, false);
+		bpf_program__set_autoload(obj->progs.block_rq_complete, false);
+		if (!env.queued)
+			bpf_program__set_autoload(obj->progs.block_rq_insert_btf, false);
+	} else {
+		bpf_program__set_autoload(obj->progs.block_rq_insert_btf, false);
+		bpf_program__set_autoload(obj->progs.block_rq_issue_btf, false);
+		bpf_program__set_autoload(obj->progs.block_rq_complete_btf, false);
+		if (!env.queued)
+			bpf_program__set_autoload(obj->progs.block_rq_insert, false);
+	}
 
     // bpf load
     if ((err = bio_scheduler_latency_bpf__load(obj))) {
@@ -231,10 +239,10 @@ int main(int argc, char *argv[])
 	// signal
     signal(SIGINT, sig_handler);
 
-	print("[Tracing block device I/O...]\n");
+	printf("[Tracing block device I/O...]\n");
 
     for (;;) {
-        sleep(env.duration);
+        sleep(env.interval);
         printf("\n");
 
         if (env.timestamp) {

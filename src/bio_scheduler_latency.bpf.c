@@ -56,8 +56,8 @@ static int __always_inline trace_rq_start(struct request *rq, int issue)
 	return 0;
 }
 
-SEC("raw_tp/block_rq_insert")
-int BPF_PROG(block_rq_insert)
+
+static int handle_block_rq_insert(__u64 *ctx)
 {
 	if (LINUX_KERNEL_VERSION < KERNEL_VERSION(5, 11, 0))
 		return trace_rq_start((void *)ctx[1], false);
@@ -65,8 +65,7 @@ int BPF_PROG(block_rq_insert)
 		return trace_rq_start((void *)ctx[0], false);
 }
 
-SEC("raw_tp/block_rq_issue")
-int BPF_PROG(block_rq_issue)
+static int handle_block_rq_issue(__u64 *ctx)
 {
 	if (LINUX_KERNEL_VERSION < KERNEL_VERSION(5, 11, 0))
 		return trace_rq_start((void *)ctx[1], true);
@@ -74,8 +73,7 @@ int BPF_PROG(block_rq_issue)
 		return trace_rq_start((void *)ctx[0], true);
 }
 
-SEC("raw_tp/block_rq_complete")
-int BPF_PROG(block_rq_complete, struct request *rq, int error, unsigned int nr_bytes)
+static int handle_block_rq_complete(struct request *rq, int error, unsigned int nr_bytes)
 {
 	u64 slot, *tsp, ts = bpf_ktime_get_ns();
 	struct hist_key hkey = {};
@@ -119,6 +117,42 @@ int BPF_PROG(block_rq_complete, struct request *rq, int error, unsigned int nr_b
 cleanup:
 	bpf_map_delete_elem(&start, &rq);
 	return 0;
+}
+
+SEC("tp_btf/block_rq_insert")
+int block_rq_insert_btf(u64 *ctx)
+{
+	return handle_block_rq_insert(ctx);
+}
+
+SEC("tp_btf/block_rq_issue")
+int block_rq_issue_btf(u64 *ctx)
+{
+	return handle_block_rq_issue(ctx);
+}
+
+SEC("tp_btf/block_rq_complete")
+int BPF_PROG(block_rq_complete_btf, struct request *rq, int error, unsigned int nr_bytes)
+{
+	return handle_block_rq_complete(rq, error, nr_bytes);
+}
+
+SEC("raw_tp/block_rq_insert")
+int BPF_PROG(block_rq_insert)
+{
+	return handle_block_rq_insert(ctx);
+}
+
+SEC("raw_tp/block_rq_issue")
+int BPF_PROG(block_rq_issue)
+{
+	return handle_block_rq_issue(ctx);
+}
+
+SEC("raw_tp/block_rq_complete")
+int BPF_PROG(block_rq_complete, struct request *rq, int error, unsigned int nr_bytes)
+{
+	return handle_block_rq_complete(rq, error, nr_bytes);
 }
 
 char LICENSE[] SEC("license") = "GPL";
