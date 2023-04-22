@@ -38,7 +38,7 @@ struct env {
 };
 
 const char argp_program_doc[] =
-"ummarize run queue latency as a histogram.\n"
+"Summarize run queue latency as a histogram.\n"
 "\n"
 "USAGE: cpu_run_queue_latency [--help] [parms]\n"
 "\n"
