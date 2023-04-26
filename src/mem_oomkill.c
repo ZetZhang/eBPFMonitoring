@@ -27,13 +27,13 @@ struct env {
 const char argp_program_doc[] =
 "oomkill...\n"
 "\n"
-"USAGE: ebpf_program [--help]\n"
+"USAGE: mem_oomkill [--help]\n"
 "\n"
 "EXAMPLES:\n"
-"    oomkill               # trace OOM kills\n";
+"    mem_oomkill               # trace OOM kills\n";
 
 static const struct argp_option opts[] = {
-	{ "Desc.", 'd', NULL, 0, "doc..." },
+	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
     { NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
     {}
 };
