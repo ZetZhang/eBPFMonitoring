@@ -31,7 +31,7 @@ struct env {
 	bool per_process;
 	bool per_thread;
 	bool per_pidns;
-	// bool timestamp;
+	bool timestamp;
 } env = {
 	.interval = 99999999,
 	.times = 99999999,
@@ -40,30 +40,84 @@ struct env {
 const char argp_program_doc[] =
 "Summarize run queue latency as a histogram.\n"
 "\n"
-"USAGE: cpu_run_queue_latency [--help] [parms]\n"
+"USAGE: cpu_run_queue_latency [--help] [interval] [count] [-T] [-m] [--pidnss] [-L] [-P] [-p PID]\n"
 "\n"
 "EXAMPLES:\n"
-"    cpu_run_queue_latency       # summarize run queue latency as a histogram\n";
+"    cpu_run_queue_latency  			# summarize run queue latency as a histogram\n"
+"    cpu_run_queue_latency 1 10    		# print 1 second summaries, 10 times\n"
+"    cpu_run_queue_latency -mT 1   		# 1s summaries, milliseconds, and timestamps\n"
+"    cpu_run_queue_latency -P     		# show each PID separately\n"
+"    cpu_run_queue_latency -p 200  		# trace PID 200 only\n";
 
 static const struct argp_option opts[] = {
-	{ "Desc.", 'd', NULL, 0, "doc..." },
+	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
+	{ "milliseconds", 'm', NULL, 0, "Millisecond histogram" },
+	{ "pidnss", OPT_PIDNSS, NULL, 0, "Print a histogram per PID namespace" },
+	{ "pids", 'P', NULL, 0, "Print a histogram per process ID" },
+	{ "tids", 'L', NULL, 0, "Print a histogram per thread ID" },
+	{ "pid", 'p', "PID", 0, "Trace this PID only" },
+	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
 	{},
 };
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	// static int pos_args;
+	static int pos_args;
+
 	switch (key) {
+	case OPT_PIDNSS:
+		env.per_pidns = true;
+		break;
+	case 'm':
+		env.milliseconds = true;
+		break;
+	case 'p':
+		errno = 0;
+		env.pid = strtol(arg, NULL, 10);
+		if (errno) {
+			fprintf(stderr, "invalid PID: %s\n", arg);
+			argp_usage(state);
+		}
+		break;
+	case 'L':
+		env.per_thread = true;
+		break;
+	case 'P':
+		env.per_process = true;
+		break;
+	case 'T':
+		env.timestamp = true;
+		break;
     case ARGP_KEY_ARG:
         errno = 0;
-        // if (pos_args == 0) {
-
-        // } else if (pos_args == 1) {
-
-        // } else {
-
-        // }
+		if (pos_args == 0) {
+			env.interval = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid internal\n");
+				argp_usage(state);
+			}
+		} else if (pos_args == 1) {
+			env.times = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid times\n");
+				argp_usage(state);
+			}
+		} else {
+			fprintf(stderr,
+				"unrecognized positional argument: %s\n", arg);
+			argp_usage(state);
+		}
+		pos_args++;
+		break;
+	case ARGP_KEY_END:
+		break;
+	case 'v':
+		env.verbose = true;
+		break;
+	case 'h':
+		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);
+		break;
 	default:
 		return ARGP_ERR_UNKNOWN;
 	}
@@ -121,6 +175,9 @@ int main(int argc, char *argv[])
 	};
 
     struct cpu_run_queue_latency_bpf *obj;
+	struct tm *tm;
+	time_t t;
+	char ts[32];
     int err;
 	int cgfd = -1;
 
@@ -168,11 +225,6 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 
-	// cgroup
-	// if (env.cg) {
-
-	// }
-
 	// bpf attach
 	if ((err = cpu_run_queue_latency_bpf__attach(obj))) {
 		fprintf(stderr, "failed to attach BPF programs\n");
@@ -189,9 +241,12 @@ int main(int argc, char *argv[])
 		sleep(env.interval);
 		printf("\n");
 
-		// if (env.timestamp) {
-
-		// }
+		if (env.timestamp) {
+			time(&t);
+			tm = localtime(&t);
+			strftime(ts, sizeof(ts), "%H:%M:%S", tm);
+			printf("%-8s\n", ts);
+		}
 
 		if ((err = print_log2_hists(obj->maps.hists)))
 			break;
