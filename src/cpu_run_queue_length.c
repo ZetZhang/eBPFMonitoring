@@ -27,7 +27,7 @@ struct env {
     bool per_cpu; // bpf global
     bool host;    // bpf global
     bool runqocc;
-    // bool timestamps;
+    bool timestamps;
     time_t interval;
 	pid_t pid;
 	int times;
@@ -41,30 +41,82 @@ struct env {
 const char argp_program_doc[] =
 "Summarize scheduler run queue length as a histogram...\n"
 "\n"
-"USAGE: ebpf_program [--help] [parms]\n"
+"USAGE: ebpf_program [--help] [interval] [count]\n"
 "\n"
 "EXAMPLES:\n"
-"    cpu_run_queu_length     # summarize scheduler run queue length as a histogram\n";
+"    cpu_run_queu_length     # summarize scheduler run queue length as a histogram\n"
+"    cpu_run_queu_length 1 10    # print 1 second summaries, 10 times\n"
+"    cpu_run_queu_length -T 1    # 1s summaries and timestamps\n"
+"    cpu_run_queu_length -O      # report run queue occupancy\n"
+"    cpu_run_queu_length -C      # show each CPU separately\n"
+"    cpu_run_queu_length -H      # show nr_running from host's rq instead of cfs_rq\n"
+"    cpu_run_queu_length -f 199  # sample at 199HZ\n"
+;
 
 static const struct argp_option opts[] = {
-	{ "Desc.", 'd', NULL, 0, "doc..." },
+    { "cpus", 'C', NULL, 0, "Print output for each CPU separately" },
+	{ "frequency", 'f', "FREQUENCY", 0, "Sample with a certain frequency" },
+	{ "runqocc", 'O', NULL, 0, "Report run queue occupancy" },
+	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
+	{ "host", 'H', NULL, 0, "Report nr_running from host's rq" },
+	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
     {},
 };
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	// static int pos_args;
+	static int pos_args;
+    
 	switch (key) {
     case ARGP_KEY_ARG:
         errno = 0;
-        // if (pos_args == 0) {
-
-        // } else if (pos_args == 1) {
-
-        // } else {
-
-        // }
+		if (pos_args == 0) {
+			env.interval = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid internal\n");
+				argp_usage(state);
+			}
+		} else if (pos_args == 1) {
+			env.times = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid times\n");
+				argp_usage(state);
+			}
+		} else {
+			fprintf(stderr,
+				"unrecognized positional argument: %s\n", arg);
+			argp_usage(state);
+		}
+		pos_args++;
+		break;
+    case ARGP_KEY_END:
+        break;
+    case 'C':
+		env.per_cpu = true;
+		break;
+	case 'O':
+		env.runqocc = true;
+		break;
+	case 'T':
+		env.timestamp = true;
+		break;
+	case 'H':
+		env.host = true;
+		break;
+	case 'f':
+		errno = 0;
+		env.freq = strtol(arg, NULL, 10);
+		if (errno || env.freq <= 0) {
+			fprintf(stderr, "Invalid freq (in hz): %s\n", arg);
+			argp_usage(state);
+		}
+	case 'v':
+		env.verbose = true;
+		break;
+	case 'h':
+		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);
+		break;
 	default:
 		return ARGP_ERR_UNKNOWN;
 	}
@@ -107,9 +159,32 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 }
 
 static struct hist zero;
-// static void print_runq_occupancy(struct runqlen_bpf__bss *bss) {
+static void print_runq_occupancy(struct runqlen_bpf__bss *bss) {
+	struct hist hist;
+	int slot, i = 0;
+	float runqocc;
 
-// }
+	do {
+		__u64 samples, idle = 0, queued = 0;
+
+		hist = bss->hists[i];
+		bss->hists[i] = zero;
+		for (slot = 0; slot < MAX_SLOTS; slot++) {
+			__u64 val = hist.slots[slot];
+
+			if (slot == 0)
+				idle += val;
+			else
+				queued += val;
+		}
+		samples = idle + queued;
+		runqocc = queued * 1.0 / max(1ULL, samples);
+		if (env.per_cpu)
+			printf("runqocc, CPU %-3d %6.2f%%\n", i, 100*runqocc);
+		else
+			printf("runqocc: %0.2f%%\n", 100 * runqocc);
+	} while (env.per_cpu && ++i < nr_cpus);
+}
 
 // hist printer
 static void print_linear_hists(struct cpu_run_queue_length_bpf__bss *bss) 
@@ -135,6 +210,9 @@ int main(int argc, char **argv)
 
     struct bpf_link *links[MAX_CPU_NR] = {};
     struct cpu_run_queue_length_bpf *obj;
+    struct tm *tm;
+	time_t t;
+	char ts[32];
     int err;
 
     // argp parse
@@ -188,9 +266,12 @@ int main(int argc, char **argv)
         sleep(env.interval); // interval
         printf("\n");
 
-        // if (env.timestamp) {
-
-        // }
+        if (env.timestamp) {
+			time(&t);
+			tm = localtime(&t);
+			strftime(ts, sizeof(ts), "%H:%M:%S", tm);
+			printf("%-8s\n", ts);
+		}
 
         if (env.runqocc)
             ;
