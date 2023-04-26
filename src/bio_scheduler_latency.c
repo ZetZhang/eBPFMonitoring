@@ -47,13 +47,23 @@ static void sig_handler(int sig)
 const char argp_program_doc[] =
 "Summarize block device I/O latency as a histogram.\n"
 "\n"
-"USAGE: bio_scheduler_latency [--help] [parms]\n"
+"USAGE: bio_scheduler_latency [--help] [interval] [count] [-T] [-m] [-Q] [-D] [-F] [-d disk]\n"
 "\n"
 "EXAMPLES:\n"
 "    bio_scheduler_latency         # summarize block I/O latency as a histogram\n";
+"    bio_scheduler_latency 1 10         # print 1 second summaries, 10 times\n"
+"    bio_scheduler_latency -mT 1        # 1s summaries, milliseconds, and timestamps\n"
+"    bio_scheduler_latency -Q           # include OS queued time in I/O time\n"
+"    bio_scheduler_latency -D           # show each disk device separately\n"
+"    bio_scheduler_latency -F           # show I/O flags separately\n"
+"    bio_scheduler_latency -d sdc       # Trace sdc only\n"
 
-static const struct argp_option opts[] = {
-	{ "Desc.", 'd', NULL, 0, "doc..." },
+static const struct argp_option opts[] = {	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
+	{ "milliseconds", 'm', NULL, 0, "Millisecond histogram" },
+	{ "queued", 'Q', NULL, 0, "Include OS queued time in I/O time" },
+	{ "disk", 'D', NULL, 0, "Print a histogram per disk device" },
+	{ "flag", 'F', NULL, 0, "Print a histogram per set of I/O flags" },
+	{ "disk",  'd', "DISK",  0, "Trace this disk only" },
 	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
 	{},
@@ -61,10 +71,31 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	// static int pos_args;
+	static int pos_args;
 
 	switch (key) {
-	case 'd':
+	case ARGP_KEY_ARG:
+		errno = 0;
+		if (pos_args == 0) {
+			env.interval = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid internal\n");
+				argp_usage(state);
+			}
+		} else if (pos_args == 1) {
+			env.times = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid times\n");
+				argp_usage(state);
+			}
+		} else {
+			fprintf(stderr,
+				"unrecognized positional argument: %s\n", arg);
+			argp_usage(state);
+		}
+		pos_args++;
+		break;
+	case ARGP_KEY_END:
 		break;
 	case 'h':
 		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);

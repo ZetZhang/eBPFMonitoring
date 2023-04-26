@@ -1,0 +1,13 @@
+metrics:
+  histograms:
+    - name: hists
+      help: Summarize block device I/O latency as a histogram.
+      bucket_type: exp2
+      bucket_min: 0
+      bucket_max: 27
+      bucket_multiplier: 0.000001 # microseconds to seconds
+      labels:
+        - name: slots
+          size: 108
+          decoders:
+            - name: int
