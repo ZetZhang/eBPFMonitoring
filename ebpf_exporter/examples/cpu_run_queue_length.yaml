@@ -1,7 +1,7 @@
 metrics:
   histograms:
     - name: hists
-      help: Summarize run queue latency as a histogram.
+      help: Summarize run queue length as a histogram.
       bucket_type: exp2
       bucket_min: 0
       bucket_max: 27

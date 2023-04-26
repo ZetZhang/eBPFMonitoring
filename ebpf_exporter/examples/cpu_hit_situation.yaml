@@ -1,7 +1,7 @@
 metrics:
   counters:
     - name: infos
-      help: Count global and cgroup level OOMs
+      help: Summarize cache references and misses
       perf_event_array: true
       labels:
         - name: ref
