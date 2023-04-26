@@ -40,13 +40,14 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 const char argp_program_doc[] =
 "Summarize cache references and misses by PID.\n"
 "\n"
-"USAGE: cpu_hit_situation [--help] [parms]\n"
+"USAGE: cpu_hit_situation [--help] [-c sample_period] [duration]\n"
 "\n"
 "EXAMPLES:\n"
 "    llcstat\n";
 
 static const struct argp_option opts[] = {
-	{ "Desc.", 'd', NULL, 0, "doc..." },
+	{ "tid", 't', NULL, 0, "Summarize cache references and misses by PID/TID" },
+	{ "sample_period", 'c', "SAMPLE_PERIOD", 0, "Sample one in this many number of cache reference / miss events" },
 	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
 	{},
@@ -54,11 +55,34 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	// static int pos_args;
+	static int pos_args;
 
 	switch (key) {
 	case ARGP_KEY_ARG:
-
+		if (pos_args++) {
+			fprintf(stderr,
+				"unrecognized positional argument: %s\n", arg);
+			argp_usage(state);
+		}
+		errno = 0;
+		env.duration = strtol(arg, NULL, 10);
+		if (errno) {
+			fprintf(stderr, "invalid duration\n");
+			argp_usage(state);
+		}
+		break;
+	case ARGP_KEY_ARG:
+		break;
+	case 't':
+		env.per_thread = true;
+		break;
+	case 'c':
+		errno = 0;
+		env.sample_period = strtol(arg, NULL, 10);
+		if (errno) {
+			fprintf(stderr, "invalid sample period\n");
+			argp_usage(state);
+		}
 		break;
 	case 'h':
 		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);
