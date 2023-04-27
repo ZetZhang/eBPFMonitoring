@@ -1,17 +1,21 @@
 metrics:
   histograms:
     - name: hists
-      help: Summarize run queue latency as a histogram.
+      help: Summarize fs read-ahead as a histogram.
       bucket_type: exp2
       bucket_min: 0
       bucket_max: 27
       bucket_multiplier: 0.000001 # microseconds to seconds
       labels:
-        - name: slots
-          size: 104
+        - name: unused
+          size: 4
           decoders:
             - name: uint
-        - name: comm
-          size: 16
+        - name: total
+          size: 4
           decoders:
-            - name: string
+            - name: uint
+        - name: slots
+          size: 80
+          decoders:
+            - name: uint

@@ -10,4 +10,4 @@ metrics:
         - name: slots
           size: 128
           decoders:
-            - name: int
+            - name: uint

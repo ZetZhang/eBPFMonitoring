@@ -1,0 +1,17 @@
+metrics:
+  counters:
+    - name: stats
+      help: Count some VFS calls
+      table: counts
+      labels:
+        - name: op
+          size: 8
+          decoders:
+            - name: uint
+            - name: static_map
+              static_map:
+                0: read
+                1: write
+                2: fsync
+                3: open
+                4: create

@@ -16,12 +16,12 @@
 - [x] vfs_cache_readahead
 
 # exporter
-- [ ] cpu_hit_situation
+- [x] cpu_hit_situation
 - [x] cpu_run_queue_latency
-- [ ] cpu_run_queue_length
+- [x] cpu_run_queue_length
 - [x] mem_oomkill
 - [ ] mem_page_stat
 - [ ] bio_complete_stat
-- [ ] bio_scheduler_latency
-- [ ] vfs_iostat
-- [ ] vfs_cache_readahead
+- [x] bio_scheduler_latency
+- [x] vfs_iostat
+- [x] vfs_cache_readahead

@@ -1,7 +1,7 @@
 metrics:
   counters:
     - name: oom_kills_total
-      help: Count global and cgroup level OOMs
+      help: Count global level OOMs
       perf_event_array: true
       labels:
         - name: fpid
