@@ -47,11 +47,11 @@ const char argp_program_doc[] =
 "\n"
 "EXAMPLES:\n"
 "    cpu_dist              # summarize on-CPU time as a histogram\n"
-"    cpu_dist 1 10         # print 1 second summaries, 10 times"
+"    cpu_dist 1 10         # print 1 second summaries, 10 times\n"
 "    cpu_dist -O           # summarize off-CPU time as a histogram\n"
-"    cpu_dist -mT 1        # 1s summaries, milliseconds, and timestamps"
-"    cpu_dist -P           # show each PID separately"
-"    cpu_dist -p 200       # trace PID 200 only";
+"    cpu_dist -mT 1        # 1s summaries, milliseconds, and timestamps\n"
+"    cpu_dist -P           # show each PID separately\n"
+"    cpu_dist -p 200       # trace PID 200 only\n";
 
 static const struct argp_option opts[] = {
 	{ "offcpu", 'O', NULL, 0, "Measure off-CPU time" },

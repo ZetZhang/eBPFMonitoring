@@ -43,7 +43,9 @@ const char argp_program_doc[] =
 "USAGE: cpu_hit_situation [--help] [-c sample_period] [duration]\n"
 "\n"
 "EXAMPLES:\n"
-"    llcstat\n";
+"    cpu_hit_situation              # Summarize cache references and misses by PID. \n"
+"    cpu_hit_situation -t     		# Summarize cache references and misses by PID/TID\n"
+"    cpu_hit_situation -c 1000      # Sample one in this many number of cache reference/miss events\n";
 
 static const struct argp_option opts[] = {
 	{ "tid", 't', NULL, 0, "Summarize cache references and misses by PID/TID" },
@@ -71,7 +73,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 			argp_usage(state);
 		}
 		break;
-	case ARGP_KEY_ARG:
+	case ARGP_KEY_END:
 		break;
 	case 't':
 		env.per_thread = true;
