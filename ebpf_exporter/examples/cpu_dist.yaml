@@ -8,9 +8,9 @@ metrics:
       bucket_multiplier: 0.000001 # microseconds to seconds
       labels:
         - name: slots
-          size: 104
+          size: 144
           decoders:
-            - name: 
+            - name: uint
         - name: comm
           size: 16
           decoders:

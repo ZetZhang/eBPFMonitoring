@@ -17,8 +17,8 @@ struct env {
 	int times;
 	bool offcpu;
 	bool timestamp;
-	// bool per_process;
-	// bool per_thread;
+	bool per_process;
+	bool per_thread;
 	bool milliseconds;
 	bool verbose;
 } env = {
@@ -43,18 +43,23 @@ static void sig_handler(int sig)
 const char argp_program_doc[] =
 "Summarize on-CPU time per task as a histogram.\n"
 "\n"
-"USAGE: cpu_dist [--help] [parms]\n"
+"USAGE: cpu_dist [--help] [interval] [count] [-O] [-T] [-m] [-P] [-L] [-p PID]\n"
 "\n"
 "EXAMPLES:\n"
-"    cpudist              # summarize on-CPU time as a histogram\n"
-"    cpudist -O           # summarize off-CPU time as a histogram\n"
-"    cpudist -mT 1        # summarize off-CPU time as a histogram\n"
-"    ebpf_program       # 1s summaries, milliseconds, and timestamps";
+"    cpu_dist              # summarize on-CPU time as a histogram\n"
+"    cpu_dist 1 10         # print 1 second summaries, 10 times"
+"    cpu_dist -O           # summarize off-CPU time as a histogram\n"
+"    cpu_dist -mT 1        # 1s summaries, milliseconds, and timestamps"
+"    cpu_dist -P           # show each PID separately"
+"    cpu_dist -p 200       # trace PID 200 only";
 
 static const struct argp_option opts[] = {
 	{ "offcpu", 'O', NULL, 0, "Measure off-CPU time" },
     { "timestamp", 'T', NULL, 0, "Include timestamp on output" },
 	{ "milliseconds", 'm', NULL, 0, "Millisecond histogram" },
+	{ "pids", 'P', NULL, 0, "Print a histogram per process ID" },
+	{ "tids", 'L', NULL, 0, "Print a histogram per thread ID" },
+	{ "pid", 'p', "PID", 0, "Trace this PID only" },
 	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
 	{},
@@ -62,7 +67,7 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	// static int pos_args;
+	static int pos_args;
 
 	switch (key) {
 	case 'O':
@@ -73,6 +78,43 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 		break;
     case 'T':
 		env.timestamp = true;
+		break;
+	case 'p':
+		errno = 0;
+		env.pid = strtol(arg, NULL, 10);
+		if (errno) {
+			fprintf(stderr, "invalid PID: %s\n", arg);
+			argp_usage(state);
+		}
+		break;
+	case 'P':
+		env.per_process = true;
+		break;
+	case 'L':
+		env.per_thread = true;
+		break;
+	case ARGP_KEY_ARG:
+		errno = 0;
+		if (pos_args == 0) {
+			env.interval = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid internal\n");
+				argp_usage(state);
+			}
+		} else if (pos_args == 1) {
+			env.times = strtol(arg, NULL, 10);
+			if (errno) {
+				fprintf(stderr, "invalid times\n");
+				argp_usage(state);
+			}
+		} else {
+			fprintf(stderr,
+				"unrecognized positional argument: %s\n", arg);
+			argp_usage(state);
+		}
+		pos_args++;
+		break;
+	case ARGP_KEY_END:
 		break;
 	case 'h':
 		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);
@@ -113,10 +155,10 @@ static int print_log2_hists(int fd)
 			fprintf(stderr, "failed to lookup hist: %d\n", err);
 			return -1;
 		}
-		// if (env.per_process)
-		// 	printf("\npid = %d %s\n", next_key, hist.comm);
-		// if (env.per_thread)
-		// 	printf("\ntid = %d %s\n", next_key, hist.comm);
+		if (env.per_process)
+			printf("\npid = %d %s\n", next_key, hist.comm);
+		if (env.per_thread)
+			printf("\ntid = %d %s\n", next_key, hist.comm);
 		print_log2_hist(hist.slots, MAX_SLOTS, units);
 		lookup_key = next_key;
 	}
@@ -165,8 +207,8 @@ int main(int argc, char *argv[])
 		bpf_program__set_autoload(obj->progs.sched_switch_btf, false);
 
 	// set bpf global
-	// obj->rodata->targ_per_process = env.per_process;
-	// obj->rodata->targ_per_thread = env.per_thread;
+	obj->rodata->targ_per_process = env.per_process;
+	obj->rodata->targ_per_thread = env.per_thread;
 	obj->rodata->targ_ms = env.milliseconds;
 	obj->rodata->targ_offcpu = env.offcpu;
 	obj->rodata->targ_tgid = env.pid;
@@ -177,9 +219,9 @@ int main(int argc, char *argv[])
     }
 
     bpf_map__set_max_entries(obj->maps.start, pid_max);
-	// if (!env.per_process && !env.per_thread)
-	// 	bpf_map__set_max_entries(obj->maps.hists, 1);
-	// else
+	if (!env.per_process && !env.per_thread)
+		bpf_map__set_max_entries(obj->maps.hists, 1);
+	else
 		bpf_map__set_max_entries(obj->maps.hists, pid_max);
 
 	// bpf load

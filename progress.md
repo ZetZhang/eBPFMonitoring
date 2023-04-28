@@ -1,4 +1,5 @@
 # CPU
+- [x] cpu_dist
 - [x] cpu_hit_situation
 - [x] cpu_run_queue_latency
 - [x] cpu_run_queue_length
@@ -16,6 +17,7 @@
 - [x] vfs_cache_readahead
 
 # exporter
+- [x] cpu_dist
 - [x] cpu_hit_situation
 - [x] cpu_run_queue_latency
 - [x] cpu_run_queue_length
