@@ -55,8 +55,9 @@ const char argp_program_doc[] =
 "USAGE: vfs_iostat [--help] [parms]\n"
 "\n"
 "EXAMPLES:\n"
-	"    vfs_iostat      # interval one second\n"
-	"    vfs_iostat 5 3  # interval five seconds, three output lines\n";
+	"    vfs_iostat      # interval 1 second\n"
+	"    vfs_iostat 5 3  # interval 5 seconds, 3 output lines\n";
+
 static char args_doc[] = "[interval [count]]";
 static const struct argp_option opts[] = {
 	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
@@ -66,7 +67,6 @@ static const struct argp_option opts[] = {
 
 static error_t parse_arg(int key, char *arg, struct argp_state *state)
 {
-	// static int pos_args;
 	long interval;
 	long count;
 
@@ -95,6 +95,8 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 			argp_usage(state);
 			break;
 		}
+		break;
+	case ARGP_KEY_END:
 		break;
 	case 'h':
 		argp_state_help(state, stderr, ARGP_HELP_STD_HELP);

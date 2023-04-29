@@ -50,15 +50,16 @@ const char argp_program_doc[] =
 "USAGE: bio_scheduler_latency [--help] [interval] [count] [-T] [-m] [-Q] [-D] [-F] [-d disk]\n"
 "\n"
 "EXAMPLES:\n"
-"    bio_scheduler_latency         # summarize block I/O latency as a histogram\n";
+"    bio_scheduler_latency         # summarize block I/O latency as a histogram\n"
 "    bio_scheduler_latency 1 10         # print 1 second summaries, 10 times\n"
 "    bio_scheduler_latency -mT 1        # 1s summaries, milliseconds, and timestamps\n"
 "    bio_scheduler_latency -Q           # include OS queued time in I/O time\n"
 "    bio_scheduler_latency -D           # show each disk device separately\n"
 "    bio_scheduler_latency -F           # show I/O flags separately\n"
-"    bio_scheduler_latency -d sdc       # Trace sdc only\n"
+"    bio_scheduler_latency -d sdc       # Trace sdc only\n";
 
 static const struct argp_option opts[] = {	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
+	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
 	{ "milliseconds", 'm', NULL, 0, "Millisecond histogram" },
 	{ "queued", 'Q', NULL, 0, "Include OS queued time in I/O time" },
 	{ "disk", 'D', NULL, 0, "Print a histogram per disk device" },
@@ -74,6 +75,28 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	static int pos_args;
 
 	switch (key) {
+	case 'm':
+		env.milliseconds = true;
+		break;
+	case 'Q':
+		env.queued = true;
+		break;
+	case 'D':
+		env.per_disk = true;
+		break;
+	case 'F':
+		env.per_flag = true;
+		break;
+	case 'T':
+		env.timestamp = true;
+		break;
+	case 'd':
+		env.disk = arg;
+		if (strlen(arg) + 1 > DISK_NAME_LEN) {
+			fprintf(stderr, "invaild disk name: too long\n");
+			argp_usage(state);
+		}
+		break;
 	case ARGP_KEY_ARG:
 		errno = 0;
 		if (pos_args == 0) {

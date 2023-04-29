@@ -16,6 +16,12 @@
 #include "trace_helpers.h"
 #include "syscall_helpers.h"
 
+#define max(x, y) ({				 \
+	typeof(x) _max1 = (x);			 \
+	typeof(y) _max2 = (y);			 \
+	(void) (&_max1 == &_max2);		 \
+	_max1 > _max2 ? _max1 : _max2; })
+
 static volatile bool exiting;
 static void sig_handler(int sig)
 {
@@ -27,7 +33,7 @@ struct env {
     bool per_cpu; // bpf global
     bool host;    // bpf global
     bool runqocc;
-    bool timestamps;
+    bool timestamp;
     time_t interval;
 	pid_t pid;
 	int times;
@@ -41,10 +47,10 @@ struct env {
 const char argp_program_doc[] =
 "Summarize scheduler run queue length as a histogram...\n"
 "\n"
-"USAGE: ebpf_program [--help] [interval] [count]\n"
+"USAGE: cpu_run_queu_length [--help] [interval] [count] [-T] [-m] [--pidnss] [-L] [-P] [-p PID]\n"
 "\n"
 "EXAMPLES:\n"
-"    cpu_run_queu_length     # summarize scheduler run queue length as a histogram\n"
+"    cpu_run_queu_length         # summarize scheduler run queue length as a histogram\n"
 "    cpu_run_queu_length 1 10    # print 1 second summaries, 10 times\n"
 "    cpu_run_queu_length -T 1    # 1s summaries and timestamps\n"
 "    cpu_run_queu_length -O      # report run queue occupancy\n"
@@ -159,7 +165,7 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 }
 
 static struct hist zero;
-static void print_runq_occupancy(struct runqlen_bpf__bss *bss) {
+static void print_runq_occupancy(struct cpu_run_queue_length_bpf__bss *bss) {
 	struct hist hist;
 	int slot, i = 0;
 	float runqocc;
@@ -274,7 +280,7 @@ int main(int argc, char **argv)
 		}
 
         if (env.runqocc)
-            ;
+            print_runq_occupancy(obj->bss);
         else
             print_linear_hists(obj->bss);
 

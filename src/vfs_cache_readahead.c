@@ -33,14 +33,14 @@ static void sig_handler(int sig)
 const char argp_program_doc[] =
 "Show fs automatic read-ahead usage.\n"
 "\n"
-"USAGE: readahead [--help] [-d DURATION]\n"
+"USAGE: vfs_cache_readahead [--help] [-d duration]\n"
 "\n"
 "EXAMPLES:\n"
-"    readahead              # summarize on-CPU time as a histogram\n"
-"    readahead -d 10        # trace for 10 seconds only\n";
+"    vfs_cache_readahead              # summarize on-CPU time as a histogram\n"
+"    vfs_cache_readahead -d 10        # trace for 10 seconds only\n";
 
 static const struct argp_option opts[] = {
-	{ "duration", 'd', "DURATION", 0, "Duration to trace"},
+	{ "duration", 'd', "duration", 0, "Duration to trace"},
 	{ "verbose", 'v', NULL, 0, "Verbose debug output" },
 	{ NULL, 'h', NULL, OPTION_HIDDEN, "Show the full help" },
 	{},
