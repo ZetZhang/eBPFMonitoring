@@ -1,0 +1,22 @@
+@startuml
+title CPU time distribution BPF program
+
+actor User
+User -> "BPF program": set program parameters (targ_per_process, targ_per_thread, targ_offcpu, targ_ms, targ_tgid)
+"BPF program" -> Kernel: initialize start Map with pid as key and timestamp as value
+"BPF program" -> Kernel: initialize hists Map with id (tgid/pid/-1) as key and initial_hist as value
+loop for each sched_switch event
+Kernel -> "BPF program": trigger sched_switch event with prev and next task_structs
+"BPF program" -> Kernel: calculate current timestamp ts
+if (targ_offcpu) then (yes)
+"BPF program" -> Kernel: store start time of prev task if prev_tgid matches targ_tgid
+"BPF program" -> Kernel: update histogram of next task if tgid matches targ_tgid
+else
+if (prev task state is TASK_RUNNING) then (yes)
+"BPF program" -> Kernel: update histogram of prev task if prev_tgid matches targ_tgid
+end
+"BPF program" -> Kernel: store start time of next task if tgid matches targ_tgid
+endif
+end
+"BPF program" -> User: output histograms for each tgid/pid
+@enduml
