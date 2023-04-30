@@ -15,3 +15,7 @@ cpu_run_queue_length
 mem_oomkill
 vfs_cache_readahead
 vfs_iostat
+data
+.ccls-cache/
+.VSCodeCounter/
+.vscode/
