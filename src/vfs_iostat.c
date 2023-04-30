@@ -16,6 +16,7 @@ struct env {
 	.interval = 1,
 };
 
+// 当前时间的格式化输出
 static const char *strftime_now(char *s, size_t max, const char *format)
 {
 	struct tm *tm;
@@ -118,13 +119,14 @@ static void print_header(void)
 	printf("\n");
 }
 
+// 打印一段时间内收集的数据，包括READ, WRITE, FSYNC, OPEN, CREATE
 static void print_and_reset_stats(__u64 stats[S_MAXSTAT])
 {
 	char s[16];
 
 	printf("%-8s: ", strftime_now(s, sizeof(s), "%H:%M:%S"));
 	for (int i = 0; i < S_MAXSTAT; i++) {
-		__u64 val = __atomic_exchange_n(&stats[i], 0, __ATOMIC_RELAXED);
+		__u64 val = __atomic_exchange_n(&stats[i], 0, __ATOMIC_RELAXED); // 获取并置0
 		printf(" %8llu", val / env.interval);
 	}
 	printf("\n");

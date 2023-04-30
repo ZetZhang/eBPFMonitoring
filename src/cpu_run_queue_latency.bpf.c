@@ -31,13 +31,14 @@ struct {
 
 static struct hist zero;
 
-// wakeup & new
+// wakeup & new 记录起始时间戳
 static int trace_enqueue(u32 tgid, u32 pid)
 {
 	u64 ts;
-
+	// 如果进程ID为0则退出
 	if (!pid)
 		return 0;
+	// 如果进程组ID不为0,但不与当前进程组相同则退出
 	if (targ_tgid && targ_tgid != tgid)
 		return 0;
 
@@ -46,40 +47,39 @@ static int trace_enqueue(u32 tgid, u32 pid)
 	return 0;
 }
 
+// PID是系统全局唯一标识，但不同PID namespace下相同的PID可以对应不同进程，因此需要避免PID冲突
 static unsigned int pid_namespace(struct task_struct *task)
 {
 	struct pid *pid;
-	unsigned int level;
+	unsigned int level, inum;
 	struct upid upid;
-	unsigned int inum;
 
-	pid = BPF_CORE_READ(task, thread_pid);
-	level = BPF_CORE_READ(pid, level);
-	bpf_core_read(&upid, sizeof(upid), &pid->numbers[level]);
-	inum = BPF_CORE_READ(upid.ns, ns.inum);
+	pid = BPF_CORE_READ(task, thread_pid);	// task->thread_pid类型指针
+	level = BPF_CORE_READ(pid, level);		// pid层级
+	bpf_core_read(&upid, sizeof(upid), &pid->numbers[level]); // pid->numbers下level对应的upid结构体
+	inum = BPF_CORE_READ(upid.ns, ns.inum);	// upid.ns的ns.inum表示PID所在namespace的inode号
 
 	return inum;
 }
 
-// switch
+// switch 跟踪进程调度并记录运行时间
 static int handle_switch(bool preempt, struct task_struct *prev, struct task_struct *next)
 {
     struct hist *histp;
     u64 *tsp, slot;
 	u32 pid, hkey;
 	s64 delta;
-
+	// start Map记录前一个进程状态，表示进程开始运行
     if (get_task_state(prev) == TASK_RUNNING)
 		trace_enqueue(BPF_CORE_READ(prev, tgid), BPF_CORE_READ(prev, pid));
-
+	// 查找当前pid的开始运行时间，不存在则退出
     pid = BPF_CORE_READ(next, pid);
-
     if (!(tsp = bpf_map_lookup_elem(&start, &pid)))
         return 0;
-
+	// 计算时差
     if ((delta = bpf_ktime_get_ns() - *tsp) < 0)
         goto cleanup;
-
+	// 直方图Map作key
     if (targ_per_process)
 		hkey = BPF_CORE_READ(next, tgid);
 	else if (targ_per_thread)
@@ -88,13 +88,12 @@ static int handle_switch(bool preempt, struct task_struct *prev, struct task_str
 		hkey = pid_namespace(next);
 	else
 		hkey = -1;
-
-	histp = bpf_map_lookup_or_try_init(&hists, &hkey, &zero);
-	if (!histp)
+	// hists中包含slots和comm
+	if (!(histp = bpf_map_lookup_or_try_init(&hists, &hkey, &zero)))
 		goto cleanup;
 	if (!histp->comm[0])
 		bpf_probe_read_kernel_str(&histp->comm, sizeof(histp->comm), next->comm);
-
+	// 计算直方图slots位，并增加其计数值
 	if (targ_ms)
 		delta /= 1000000U;
 	else
@@ -106,6 +105,7 @@ static int handle_switch(bool preempt, struct task_struct *prev, struct task_str
 	__sync_fetch_and_add(&histp->slots[slot], 1);
 
 cleanup:
+	// 删除pid的运行时间记录，等待下次进程调度
     bpf_map_delete_elem(&start, &pid);
     return 0;
 }

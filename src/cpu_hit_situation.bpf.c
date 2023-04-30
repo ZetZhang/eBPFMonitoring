@@ -14,12 +14,13 @@ struct {
 	__type(value, struct value_info);
 } infos SEC(".maps");
 
-static __always_inline
-int trace_event(__u64 sample_period, bool miss)
+// 记录每个线程或进程的缓存引用总次数和缓存未命中次数的缓存行访问计数
+static __always_inline int trace_event(__u64 sample_period, bool miss)
 {
 	struct key_info key = {};	
 	struct value_info *infop, zero = {};
 
+	// 通过cpu，pid和tid来确定一个key
 	u64 pid_tgid = bpf_get_current_pid_tgid();
 	key.cpu = bpf_get_smp_processor_id();
 	key.pid = pid_tgid >> 32;
@@ -28,8 +29,7 @@ int trace_event(__u64 sample_period, bool miss)
 	else
 		key.tid = key.pid;
 
-	infop = bpf_map_lookup_or_try_init(&infos, &key, &zero);
-	if (!infop)
+	if (!(infop = bpf_map_lookup_or_try_init(&infos, &key, &zero)))
 		return 0;
 	if (miss)
 		infop->miss += sample_period;

@@ -69,7 +69,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	return 0;
 }
 
-static int readahead__set_attach_target(struct bpf_program *prog)
+static int vfs_cache_readahead__set_attach_target(struct bpf_program *prog)
 {
     int err;
 
@@ -109,9 +109,9 @@ int main(int argc, char *argv[])
     // bpf set attach
     // Starting from v5.10-rc1 (8238287), __do_page_cache_readahead has 
     // renamed to do_page_cache_ra. So we specify the function dynamically.
-    if ((err = readahead__set_attach_target(obj->progs.do_page_cache_ra)))
+    if ((err = vfs_cache_readahead__set_attach_target(obj->progs.do_page_cache_ra)))
         goto cleanup;
-    if ((err = readahead__set_attach_target(obj->progs.do_page_cache_ra_ret)))
+    if ((err = vfs_cache_readahead__set_attach_target(obj->progs.do_page_cache_ra_ret)))
         goto cleanup;
 
     // bpf load

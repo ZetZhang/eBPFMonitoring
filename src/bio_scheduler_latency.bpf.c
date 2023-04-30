@@ -34,6 +34,7 @@ struct {
 	__type(value, struct hist);
 } hists SEC(".maps");
 
+// 跟踪块设备IO中的request开始时间
 static int __always_inline trace_rq_start(struct request *rq, int issue)
 {
 	u64 ts;
@@ -42,13 +43,11 @@ static int __always_inline trace_rq_start(struct request *rq, int issue)
 		return 0;
 
 	ts = bpf_ktime_get_ns();
-
+	// 如果filter_dev设置来，获取request所属块设备
 	if (filter_dev) {
 		struct gendisk *disk = get_disk(rq);
-		u32 dev;
-
-		dev = disk ? MKDEV(BPF_CORE_READ(disk, major),
-				BPF_CORE_READ(disk, first_minor)) : 0;
+		// 比较目标设备号，不一致返回0
+		u32 dev = disk ? MKDEV(BPF_CORE_READ(disk, major), BPF_CORE_READ(disk, first_minor)) : 0;
 		if (targ_dev != dev)
 			return 0;
 	}
@@ -56,7 +55,7 @@ static int __always_inline trace_rq_start(struct request *rq, int issue)
 	return 0;
 }
 
-
+// 如果请求添加内核IO调度队列，则记录时间
 static int handle_block_rq_insert(__u64 *ctx)
 {
 	if (LINUX_KERNEL_VERSION < KERNEL_VERSION(5, 11, 0))
@@ -65,6 +64,7 @@ static int handle_block_rq_insert(__u64 *ctx)
 		return trace_rq_start((void *)ctx[0], false);
 }
 
+// 如果请求提交到磁盘并执行，则记录时间
 static int handle_block_rq_issue(__u64 *ctx)
 {
 	if (LINUX_KERNEL_VERSION < KERNEL_VERSION(5, 11, 0))
@@ -73,38 +73,33 @@ static int handle_block_rq_issue(__u64 *ctx)
 		return trace_rq_start((void *)ctx[0], true);
 }
 
+// 跟踪块设备IO响应时间
 static int handle_block_rq_complete(struct request *rq, int error, unsigned int nr_bytes)
 {
 	u64 slot, *tsp, ts = bpf_ktime_get_ns();
 	struct hist_key hkey = {};
 	struct hist *histp;
 	s64 delta;
-
-	tsp = bpf_map_lookup_elem(&start, &rq);
-	if (!tsp)
+	// 从start中取出时间戳
+	if (!(tsp = bpf_map_lookup_elem(&start, &rq)))
 		return 0;
-
-	delta = (s64)(ts - *tsp);
-	if (delta < 0)
+	if ((delta = (s64)(ts - *tsp)) < 0)
 		goto cleanup;
 
 	if (targ_per_disk) {
 		struct gendisk *disk = get_disk(rq);
-
-		hkey.dev = disk ? MKDEV(BPF_CORE_READ(disk, major),
-					BPF_CORE_READ(disk, first_minor)) : 0;
+		hkey.dev = disk ? MKDEV(BPF_CORE_READ(disk, major), BPF_CORE_READ(disk, first_minor)) : 0;
 	}
 	if (targ_per_flag)
 		hkey.cmd_flags = BPF_CORE_READ(rq, cmd_flags);
-
-	histp = bpf_map_lookup_elem(&hists, &hkey);
-	if (!histp) {
+	// 通过dev和flags确定histp结构
+	if (!(histp = bpf_map_lookup_elem(&hists, &hkey))) {
 		bpf_map_update_elem(&hists, &hkey, &initial_hist, 0);
 		histp = bpf_map_lookup_elem(&hists, &hkey);
 		if (!histp)
 			goto cleanup;
 	}
-
+	// 计算deltal并增加对应slot的计数完成统计
 	if (targ_ms)
 		delta /= 1000000U;
 	else

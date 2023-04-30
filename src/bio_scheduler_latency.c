@@ -50,7 +50,7 @@ const char argp_program_doc[] =
 "USAGE: bio_scheduler_latency [--help] [interval] [count] [-T] [-m] [-Q] [-D] [-F] [-d disk]\n"
 "\n"
 "EXAMPLES:\n"
-"    bio_scheduler_latency         # summarize block I/O latency as a histogram\n"
+"    bio_scheduler_latency              # summarize block I/O latency as a histogram\n"
 "    bio_scheduler_latency 1 10         # print 1 second summaries, 10 times\n"
 "    bio_scheduler_latency -mT 1        # 1s summaries, milliseconds, and timestamps\n"
 "    bio_scheduler_latency -Q           # include OS queued time in I/O time\n"
@@ -58,7 +58,7 @@ const char argp_program_doc[] =
 "    bio_scheduler_latency -F           # show I/O flags separately\n"
 "    bio_scheduler_latency -d sdc       # Trace sdc only\n";
 
-static const struct argp_option opts[] = {	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
+static const struct argp_option opts[] = {	
 	{ "timestamp", 'T', NULL, 0, "Include timestamp on output" },
 	{ "milliseconds", 'm', NULL, 0, "Millisecond histogram" },
 	{ "queued", 'Q', NULL, 0, "Include OS queued time in I/O time" },
@@ -165,14 +165,11 @@ static void print_cmd_flags(int cmd_flags)
 		[REQ_OP_DRV_IN] = "DrvIn",
 		[REQ_OP_DRV_OUT] = "DrvOut",
 	};
-	int i;
 
 	printf("flags = ");
-
-	for (i = 0; i < ARRAY_SIZE(flags); i++) {
+	for (int i = 0; i < ARRAY_SIZE(flags); i++)
 		if (cmd_flags & flags[i].bit)
 			printf("%s", flags[i].str);
-	}
 
 	if ((cmd_flags & REQ_OP_MASK) < ARRAY_SIZE(ops))
 		printf("%s", ops[cmd_flags & REQ_OP_MASK]);

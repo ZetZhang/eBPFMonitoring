@@ -104,8 +104,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 				argp_usage(state);
 			}
 		} else {
-			fprintf(stderr,
-				"unrecognized positional argument: %s\n", arg);
+			fprintf(stderr, "unrecognized positional argument: %s\n", arg);
 			argp_usage(state);
 		}
 		pos_args++;
@@ -179,7 +178,6 @@ int main(int argc, char *argv[])
 	time_t t;
 	char ts[32];
     int err;
-	int cgfd = -1;
 
     // argp parse
 	if ((err = argp_parse(&argp, argc, argv, 0, NULL, NULL)))
@@ -206,7 +204,6 @@ int main(int argc, char *argv[])
 	obj->rodata->targ_per_pidns = env.per_pidns;
 	obj->rodata->targ_ms = env.milliseconds;
 	obj->rodata->targ_tgid = env.pid;
-	// obj->rodata->filter_cg = env.cg;
 
 	// set auto load
 	if (probe_tp_btf("sched_wakeup")) {
@@ -257,8 +254,6 @@ int main(int argc, char *argv[])
 
 cleanup:
 	cpu_run_queue_latency_bpf__destroy(obj);
-	if (cgfd > 0)
-		close(cgfd);
 
     return err != 0;
 }

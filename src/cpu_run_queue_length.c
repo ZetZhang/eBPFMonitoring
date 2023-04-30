@@ -90,8 +90,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 				argp_usage(state);
 			}
 		} else {
-			fprintf(stderr,
-				"unrecognized positional argument: %s\n", arg);
+			fprintf(stderr, "unrecognized positional argument: %s\n", arg);
 			argp_usage(state);
 		}
 		pos_args++;
@@ -164,15 +163,16 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
     return vfprintf(stderr, format, args);
 }
 
+// 打印运行队列占用率
 static struct hist zero;
 static void print_runq_occupancy(struct cpu_run_queue_length_bpf__bss *bss) {
 	struct hist hist;
 	int slot, i = 0;
 	float runqocc;
-
+	// do while来区分一次打印还是区分多个CPU
 	do {
 		__u64 samples, idle = 0, queued = 0;
-
+		// 计算每个时间片中运行队列的进程数量
 		hist = bss->hists[i];
 		bss->hists[i] = zero;
 		for (slot = 0; slot < MAX_SLOTS; slot++) {
@@ -185,6 +185,7 @@ static void print_runq_occupancy(struct cpu_run_queue_length_bpf__bss *bss) {
 		}
 		samples = idle + queued;
 		runqocc = queued * 1.0 / max(1ULL, samples);
+		// 打印每个CPU的占用率，否则打印总的占用率
 		if (env.per_cpu)
 			printf("runqocc, CPU %-3d %6.2f%%\n", i, 100*runqocc);
 		else
@@ -192,7 +193,7 @@ static void print_runq_occupancy(struct cpu_run_queue_length_bpf__bss *bss) {
 	} while (env.per_cpu && ++i < nr_cpus);
 }
 
-// hist printer
+// CPU运行队列长度直方图
 static void print_linear_hists(struct cpu_run_queue_length_bpf__bss *bss) 
 {
     struct hist hist;

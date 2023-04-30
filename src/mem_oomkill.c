@@ -61,7 +61,7 @@ static int handle_event(void *ctx, void *data, size_t data_sz) {
     char ts[32];
     time_t t;
     int n = 0;
-
+    // 读取系统负载值
     if ((f = fopen("/proc/loadavg", "r"))) {
         memset(buf, 0, sizeof(buf));
         n = fread(buf, 1, sizeof(buf), f);

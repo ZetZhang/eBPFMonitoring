@@ -39,4 +39,30 @@ int do_sample(struct bpf_perf_event_data *ctx)
 	return 0;
 }
 
+// static int increment_map(void *map, void *key, u64 increment)  {
+//     u64 zero = 0, *count = bpf_map_lookup_elem(map, key);
+//     if (!count) {
+//         bpf_map_update_elem(map, key, &zero, BPF_NOEXIST);
+//         count = bpf_map_lookup_elem(map, key);
+//         if (!count) {
+//             return 0;
+//         }
+//     }
+
+//     __sync_fetch_and_add(count, increment);
+
+//     return *count;
+// }
+
+
+// static int trace_event(void *map, u32 cpu, u64 sample_period)
+// {
+// 	increment_map(map, &cpu, sample_period);
+// }
+
+// SEC("perf_event/type=1,config=0,frequency=1")
+// int do_sample_exporter(struct bpf_perf_event_data *ctx)
+// {
+// }
+
 char LICENSE[] SEC("license") = "GPL";

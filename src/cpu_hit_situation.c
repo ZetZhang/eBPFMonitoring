@@ -61,9 +61,8 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 
 	switch (key) {
 	case ARGP_KEY_ARG:
-		if (pos_args++) {
-			fprintf(stderr,
-				"unrecognized positional argument: %s\n", arg);
+		if (pos_args++) { // 只能有一个位置参数
+			fprintf(stderr, "unrecognized positional argument: %s\n", arg);
 			argp_usage(state);
 		}
 		errno = 0;
@@ -101,6 +100,7 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 static int nr_cpus;
 static int open_and_attach_perf_event(__u64 config, int period, struct bpf_program *prog, struct bpf_link *links[])
 {
+	// 设定perf event属性参数，如类型、采样事件周期等
     struct perf_event_attr attr = {
 		.type = PERF_TYPE_HARDWARE,
 		.freq = 0,
@@ -108,14 +108,17 @@ static int open_and_attach_perf_event(__u64 config, int period, struct bpf_progr
 		.config = config,
 	};
     int fd;
-
+	// 关联每个CPU
     for (int i = 0; i < nr_cpus; i++) {
+		// 使用系统调用配置性能计数器的配置信息
+		// 设定上计数器不关联任何进程，不关联特定计数器ID
 		if ((fd = syscall(__NR_perf_event_open, &attr, -1, i, -1, 0)) < 0) {
 			if (errno == ENODEV) // offline
 				continue;
 			fprintf(stderr, "failed to init perf sampling: %s\n", strerror(errno));
 			return EXIT_FAILURE;
 		}
+		// 为每个perf事件关联BPF程序，并指定了fd，保存到links中
 		links[i] = bpf_program__attach_perf_event(prog, fd);
 		if (!links[i]) {
 			fprintf(stderr, "failed to attach perf event on cpu: %d\n", i);
@@ -135,14 +138,16 @@ static void print_map(struct bpf_map *map)
 	struct value_info info;
 
     while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
+		// 获取hist结构体数据，包含信息ref、miss和comm信息
 		if ((err = bpf_map_lookup_elem(fd, &next_key, &info)) < 0) {
 			fprintf(stderr, "failed to lookup infos: %d\n", err);
 			return;
 		}
-		hit = info.ref > info.miss ? info.ref - info.miss : 0;
+		hit = info.ref > info.miss ? info.ref - info.miss : 0; // 计算命中率
 		cpu = next_key.cpu;
 		pid = next_key.pid;
 		tid = next_key.tid;
+		// pid tid comm cpu ref miss rate
 		printf("%-8u ", pid);
 		if (env.per_thread)
 			printf("%-8u ", tid);
@@ -155,7 +160,7 @@ static void print_map(struct bpf_map *map)
     total_hit = total_ref > total_miss ? total_ref - total_miss : 0;
 	printf("Total References: %llu Total Misses: %llu Hit Rate: %.2f%%\n",
 		total_ref, total_miss, total_ref > 0 ? total_hit * 1.0 / total_ref * 100 : 0);
-
+	// 删除所有key
 	lookup_key.cpu = -1;
     while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
         if ((err = bpf_map_delete_elem(fd, &next_key)) < 0) {

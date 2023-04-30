@@ -128,13 +128,13 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
 	return 0;
 }
 
+// 获取系统允许的最大PID值
 static int get_pid_max(void)
 {
     int pid_max;
 	FILE *f;
 
-	f = fopen("/proc/sys/kernel/pid_max", "r");
-	if (!f)
+	if (!(f = fopen("/proc/sys/kernel/pid_max", "r")))
 		return -1;
 	if (fscanf(f, "%d\n", &pid_max) != 1)
 		pid_max = -1;
@@ -142,6 +142,7 @@ static int get_pid_max(void)
 	return pid_max;
 }
 
+// 打印直方图数据
 static int print_log2_hists(int fd)
 {
     char *units = env.milliseconds ? "msecs" : "usecs";
@@ -149,12 +150,14 @@ static int print_log2_hists(int fd)
 	struct hist hist;
 	int err;
 
+	// 遍历所有key
 	while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
-		err = bpf_map_lookup_elem(fd, &next_key, &hist);
-		if (err < 0) {
+		// 获取hist结构体数据，包含slots和comm信息
+		if ((err = bpf_map_lookup_elem(fd, &next_key, &hist)) < 0) {
 			fprintf(stderr, "failed to lookup hist: %d\n", err);
 			return -1;
 		}
+		// 打印信息并更新查找的key
 		if (env.per_process)
 			printf("\npid = %d %s\n", next_key, hist.comm);
 		if (env.per_thread)
@@ -162,11 +165,10 @@ static int print_log2_hists(int fd)
 		print_log2_hist(hist.slots, MAX_SLOTS, units);
 		lookup_key = next_key;
 	}
-
+	// 完成打印，删除map中的所有key
 	lookup_key = -2;
 	while (!bpf_map_get_next_key(fd, &lookup_key, &next_key)) {
-		err = bpf_map_delete_elem(fd, &next_key);
-		if (err < 0) {
+		if ((err = bpf_map_delete_elem(fd, &next_key)) < 0) {
 			fprintf(stderr, "failed to cleanup hist : %d\n", err);
 			return -1;
 		}
@@ -218,6 +220,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+	// set bpf map's entries
     bpf_map__set_max_entries(obj->maps.start, pid_max);
 	if (!env.per_process && !env.per_thread)
 		bpf_map__set_max_entries(obj->maps.hists, 1);
@@ -236,6 +239,7 @@ int main(int argc, char *argv[])
         goto cleanup;
     }
 
+	// get fd
 	fd = bpf_map__fd(obj->maps.hists);
 
 	// signal
