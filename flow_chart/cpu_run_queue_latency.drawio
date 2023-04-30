@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" modified="2023-04-30T19:36:22.978Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="6rZ7gr67Y6EhtQxamRpP" version="21.2.3" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="371" dy="1772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="1">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-3" target="n0bGOGl1vB_caQGsz3Hk-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" value="发生sched_wakeup进程唤醒事件或者sched_wakeup_new新进程创建事件" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="80" y="110" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="XvMBj0JRoRvtOR2lWCIM-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XvMBj0JRoRvtOR2lWCIM-0" target="WIyWlLk6GJQsqaUBKTNV-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XvMBj0JRoRvtOR2lWCIM-0" target="n0bGOGl1vB_caQGsz3Hk-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XvMBj0JRoRvtOR2lWCIM-0" value="BPF程序载入" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="180" y="-40" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-2" target="n0bGOGl1vB_caQGsz3Hk-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-2" value="发生sched_switch进程切换事件" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="260" y="110" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-7" target="n0bGOGl1vB_caQGsz3Hk-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-7" value="handle_switch处理函数" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="260" y="230" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-9" target="n0bGOGl1vB_caQGsz3Hk-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-9" value="trace_enqueue处理函数中通过start Maps保存起始时间戳" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="80" y="230" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-13" value="流程结束，等待下次事件触发" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="90" y="720" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-19" target="n0bGOGl1vB_caQGsz3Hk-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-19" value="使用trace_enqueue保存被切换进程起始时间戳" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="260" y="320" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-20" target="n0bGOGl1vB_caQGsz3Hk-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-20" value="通过start Map查找当前进程时间戳" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="260" y="420" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-21" target="n0bGOGl1vB_caQGsz3Hk-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-21" value="计算进程的调度时差并增加histp Maps的对应slots直方图数据" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="260" y="520" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n0bGOGl1vB_caQGsz3Hk-22" target="n0bGOGl1vB_caQGsz3Hk-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n0bGOGl1vB_caQGsz3Hk-22" value="删除start Maps的进程时间记录" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="260" y="620" width="120" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

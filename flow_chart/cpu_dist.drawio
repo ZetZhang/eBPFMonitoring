@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" modified="2023-04-30T19:37:42.141Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="63XXh_HqDhfDR6F2X9so" version="21.2.3" type="device" pages="2">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="448" dy="1897" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="1">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-3" target="CsoIRqTvHF78ZXT-oVU4-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" value="发生进程切换事件&lt;br&gt;触发sched_switch事件" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="155" y="80" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-0" target="WIyWlLk6GJQsqaUBKTNV-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-0" value="BPF程序载入" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="170" y="-20" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-3" target="CsoIRqTvHF78ZXT-oVU4-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-3" value="tracepoint探测事件&lt;br&gt;handle_switch处理进程切换事件" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="155" y="170" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-5" target="CsoIRqTvHF78ZXT-oVU4-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-5" value="获取切换前进程信息和切换后的进程信息，记录当前时间戳" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="152.5" y="280" width="135" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-9" target="CsoIRqTvHF78ZXT-oVU4-11" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-13" value="on-cpu" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="CsoIRqTvHF78ZXT-oVU4-12" vertex="1" connectable="0">
+          <mxGeometry x="-0.2874" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-15" value="off-cpu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-9" target="CsoIRqTvHF78ZXT-oVU4-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-9" value="统计off-cpu或者on-cpu（用户态设定）" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="150" y="380" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-11" target="CsoIRqTvHF78ZXT-oVU4-17" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-11" value="update_hist计算并递增被切换进程的延迟数据的直方图计数" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="320" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-14" target="CsoIRqTvHF78ZXT-oVU4-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-14" value="store_start保存被切换进程的时间戳" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="520" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="tVrZjSq8soQik7ZS93Ss-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-17" target="tVrZjSq8soQik7ZS93Ss-0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-17" value="store_start保存切换之后的进程时间戳" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="320" y="620" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="tVrZjSq8soQik7ZS93Ss-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="CsoIRqTvHF78ZXT-oVU4-18" target="tVrZjSq8soQik7ZS93Ss-0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsoIRqTvHF78ZXT-oVU4-18" value="update_hist计算并递增当前进程的延迟数据的直方图计数" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="610" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tVrZjSq8soQik7ZS93Ss-0" value="等待下一个调度事件" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="250" y="740" width="100" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="MlFj8ul10TlqUIaTR0TX" name="第 2 页">
+    <mxGraphModel dx="1562" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
