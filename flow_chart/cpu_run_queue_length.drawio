@@ -1,51 +1,48 @@
-<mxfile host="app.diagrams.net" modified="2023-04-30T19:54:11.955Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="KLd-UiRTn9d2o1URWQW2" version="21.2.3" type="device">
+<mxfile host="app.diagrams.net" modified="2023-05-01T10:22:27.600Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="D92AU_EXYNaAn_RnKbPS" version="21.2.3" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="371" dy="1772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1562" dy="2043" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="1">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
-        <mxCell id="WIyWlLk6GJQsqaUBKTNV-10" value="Bulb&lt;br&gt;burned out?" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="348" y="-170" width="100" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-0" target="GC-SaLZ1t_cLAoonpcbj-3">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-0" target="GC-SaLZ1t_cLAoonpcbj-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-0" value="BPF程序载入" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-0" value="BPF程序载入" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="180" y="-50" width="100" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-3" target="GC-SaLZ1t_cLAoonpcbj-5">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-3" target="GC-SaLZ1t_cLAoonpcbj-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-3" value="通过用户态设定perf-event性能事件的属性参数及采样事件周期等" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-3" value="通过用户态设定perf-event性能事件的属性参数及采样事件周期等" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="160" y="70" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-5" target="GC-SaLZ1t_cLAoonpcbj-7">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-5" target="GC-SaLZ1t_cLAoonpcbj-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-5" value="获取当前task_struct" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-5" value="获取当前task_struct" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="160" y="180" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-10" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-7" target="GC-SaLZ1t_cLAoonpcbj-8">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-10" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-7" target="GC-SaLZ1t_cLAoonpcbj-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-7" target="GC-SaLZ1t_cLAoonpcbj-11">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-7" target="GC-SaLZ1t_cLAoonpcbj-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-13" value="no" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="GC-SaLZ1t_cLAoonpcbj-12">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-13" value="no" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="GC-SaLZ1t_cLAoonpcbj-12" vertex="1" connectable="0">
           <mxGeometry x="0.43" y="2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-7" value="targ_host是否为设定状态" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-7" value="targ_host是否为设定状态" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="180" y="280" width="100" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-8" target="GC-SaLZ1t_cLAoonpcbj-14">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-8" target="GC-SaLZ1t_cLAoonpcbj-14" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-8" value="通过rq获取nr_running" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-8" value="通过rq获取nr_running" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="160" y="410" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-18" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-11">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-18" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-11" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="230" y="500" as="targetPoint" />
             <Array as="points">
@@ -53,30 +50,30 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-11" value="通过cfs_rq获取nr_running" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-11" value="通过cfs_rq获取nr_running" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="328" y="410" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-23" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-14" target="GC-SaLZ1t_cLAoonpcbj-20">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-23" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-14" target="GC-SaLZ1t_cLAoonpcbj-20" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-14" target="GC-SaLZ1t_cLAoonpcbj-21">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-14" target="GC-SaLZ1t_cLAoonpcbj-21" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-25" value="no" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="GC-SaLZ1t_cLAoonpcbj-24">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-25" value="no" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="GC-SaLZ1t_cLAoonpcbj-24" vertex="1" connectable="0">
           <mxGeometry x="0.6325" y="3" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-14" value="targ_per_cpu多CPU探测是否设置" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-14" value="targ_per_cpu多CPU探测是否设置" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="180" y="530" width="100" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-20" target="GC-SaLZ1t_cLAoonpcbj-26">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-20" target="GC-SaLZ1t_cLAoonpcbj-26" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-20" value="cpu = 0" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-20" value="cpu = 0" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="160" y="670" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-28" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-28" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="230" y="760" as="targetPoint" />
             <mxPoint x="400" y="710" as="sourcePoint" />
@@ -85,16 +82,16 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-21" value="cpu = curr_cpu_id" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-21" value="cpu = curr_cpu_id" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="328" y="670" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-26" target="GC-SaLZ1t_cLAoonpcbj-33">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="GC-SaLZ1t_cLAoonpcbj-26" target="GC-SaLZ1t_cLAoonpcbj-33" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-26" value="原子方式增加对应cpu索引的hist数组的slots数值" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-26" value="原子方式增加对应cpu索引的hist数组的slots数值" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="160" y="790" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GC-SaLZ1t_cLAoonpcbj-33" value="流程结束，等待下次周期事件触发" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="GC-SaLZ1t_cLAoonpcbj-33" value="流程结束，等待下次周期事件触发" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="180" y="880" width="100" height="60" as="geometry" />
         </mxCell>
       </root>

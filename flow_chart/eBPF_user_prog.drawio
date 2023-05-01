@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net" modified="2023-05-01T10:10:52.785Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="k5Ri9AWy-gZIw1IPC-Uj" version="21.2.3" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="538" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="1">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="PaQXplLz_UWPSjRDmyiB-19" target="PaQXplLz_UWPSjRDmyiB-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-19" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="110" y="720" width="210" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-17" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="115" y="390" width="200" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="PaQXplLz_UWPSjRDmyiB-1" target="PaQXplLz_UWPSjRDmyiB-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-1" value="BPF userspace program" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="160" y="300" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-2" value="argp options config" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="435" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-3" value="parse arg" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="475" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-4" value="argp program doc" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="515" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="PaQXplLz_UWPSjRDmyiB-5" target="PaQXplLz_UWPSjRDmyiB-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-5" value="args doc" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="555" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-6" value="fetch BTF for CO-RE" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="780" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-7" value="bpf program open" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="820" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-8" value="bpf global setup" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="860" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-9" value="bpf program load" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="900" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-12" value="bpf program attach" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="940" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="PaQXplLz_UWPSjRDmyiB-14" target="PaQXplLz_UWPSjRDmyiB-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-14" value="设置debug打印函数&lt;br&gt;设置Ctrl-c信号处理" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="155" y="650" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="PaQXplLz_UWPSjRDmyiB-15" target="PaQXplLz_UWPSjRDmyiB-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-15" value="while 0 or when exit signal&lt;br&gt;主要处理过程，获取和统计BPF内核程序的数据" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="140" y="1040" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="PaQXplLz_UWPSjRDmyiB-16" target="PaQXplLz_UWPSjRDmyiB-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-16" value="cleanup&lt;br&gt;退出前清除并释放BPF资源" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="140" y="1150" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-18" value="命令行参数解析" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="160" y="390" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-22" value="BPFskeleton&amp;nbsp;&lt;br&gt;Helper" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="170" y="720" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="PaQXplLz_UWPSjRDmyiB-28" value="结束" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="160" y="1240" width="110" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
