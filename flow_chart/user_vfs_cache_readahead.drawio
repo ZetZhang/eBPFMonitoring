@@ -1,0 +1,51 @@
+<mxfile host="app.diagrams.net" modified="2023-05-01T19:56:36.743Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="sLYmrgeVplr1qlTihXPR" version="21.2.3" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1562" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="5WdiHLl4Kyi3TTLrikci-1" target="5WdiHLl4Kyi3TTLrikci-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-1" value="开始" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="314" y="110" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="5WdiHLl4Kyi3TTLrikci-3" target="5WdiHLl4Kyi3TTLrikci-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="364" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-3" value="env配置信息初始化&lt;br&gt;设置libbpf_printf_fn打印信息&lt;br&gt;设置sig_handle信号处理函数&lt;br&gt;args parse命令行处理设置" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="287" y="240" width="154" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="5WdiHLl4Kyi3TTLrikci-5" target="5WdiHLl4Kyi3TTLrikci-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-5" value="变量初始化和BPF程序载入" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="291" y="370" width="146" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="5WdiHLl4Kyi3TTLrikci-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="460" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="481" y="550" />
+              <mxPoint x="481" y="460" />
+              <mxPoint x="370" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="5WdiHLl4Kyi3TTLrikci-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="364" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-8" value="while循环" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="296" y="510" width="136" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="5WdiHLl4Kyi3TTLrikci-9" value="结束" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="314" y="880" width="100" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
