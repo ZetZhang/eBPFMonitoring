@@ -171,3 +171,58 @@ logger=context userId=1 orgId=1 uname=admin t=2023-04-16T22:30:45.881807502+08:0
 logger=server t=2023-04-16T22:30:58.756769895+08:00 level=info msg="Shutdown started" reason="System signal: interrupt"
 logger=tracing t=2023-04-16T22:30:58.757054027+08:00 level=info msg="Closing tracing"
 logger=ticker t=2023-04-16T22:30:58.757227664+08:00 level=info msg=stopped last_tick=2023-04-16T22:30:50+08:00
+logger=settings t=2023-05-03T16:01:49.320976941+08:00 level=info msg="Starting Grafana" version=9.4.7 commit=4add91f03d branch=HEAD compiled=2023-03-17T07:56:52+08:00
+logger=settings t=2023-05-03T16:01:49.321491261+08:00 level=warn msg="\"sentry\" frontend logging provider is deprecated and will be removed in the next major version. Use \"grafana\" provider instead."
+logger=settings t=2023-05-03T16:01:49.321541776+08:00 level=info msg="Config loaded from" file=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/conf/defaults.ini
+logger=settings t=2023-05-03T16:01:49.321572173+08:00 level=info msg="Path Home" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7
+logger=settings t=2023-05-03T16:01:49.321605396+08:00 level=info msg="Path Data" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data
+logger=settings t=2023-05-03T16:01:49.321631014+08:00 level=info msg="Path Logs" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/log
+logger=settings t=2023-05-03T16:01:49.321654619+08:00 level=info msg="Path Plugins" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/plugins
+logger=settings t=2023-05-03T16:01:49.321678494+08:00 level=info msg="Path Provisioning" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/conf/provisioning
+logger=settings t=2023-05-03T16:01:49.321701698+08:00 level=info msg="App mode production"
+logger=sqlstore t=2023-05-03T16:01:49.322285919+08:00 level=info msg="Connecting to DB" dbtype=sqlite3
+logger=migrator t=2023-05-03T16:01:49.364655519+08:00 level=info msg="Starting DB migrations"
+logger=migrator t=2023-05-03T16:01:49.374919861+08:00 level=info msg="migrations completed" performed=0 skipped=571 duration=915.827µs
+logger=licensing t=2023-05-03T16:01:49.376095588+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=plugin.loader t=2023-05-03T16:01:49.48919614+08:00 level=info msg="Plugin registered" pluginID=input
+logger=plugin.finder t=2023-05-03T16:01:49.48930795+08:00 level=warn msg="Skipping finding plugins as directory does not exist" path=/home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/plugins
+logger=secrets t=2023-05-03T16:01:49.489448455+08:00 level=info msg="Envelope encryption state" enabled=true currentprovider=secretKey.v1
+logger=query_data t=2023-05-03T16:01:49.495079452+08:00 level=info msg="Query Service initialization"
+logger=live.push_http t=2023-05-03T16:01:49.513465616+08:00 level=info msg="Live Push Gateway initialization"
+logger=infra.usagestats.collector t=2023-05-03T16:01:50.697779177+08:00 level=info msg="registering usage stat providers" usageStatsProvidersLen=2
+logger=provisioning.alerting t=2023-05-03T16:01:50.699166944+08:00 level=info msg="starting to provision alerting"
+logger=provisioning.alerting t=2023-05-03T16:01:50.69923384+08:00 level=info msg="finished to provision alerting"
+logger=ngalert.state.manager t=2023-05-03T16:01:50.699634706+08:00 level=info msg="Warming state cache for startup"
+logger=report t=2023-05-03T16:01:50.699725116+08:00 level=warn msg="Scheduling and sending of reports disabled, SMTP is not configured and enabled. Configure SMTP to enable."
+logger=grafanaStorageLogger t=2023-05-03T16:01:50.700897617+08:00 level=info msg="storage starting"
+logger=http.server t=2023-05-03T16:01:50.703060635+08:00 level=info msg="HTTP Server Listen" address=[::]:3000 protocol=http subUrl= socket=
+logger=ngalert.state.manager t=2023-05-03T16:01:50.710394592+08:00 level=info msg="State cache has been initialized" states=0 duration=10.755718ms
+logger=ngalert.multiorg.alertmanager t=2023-05-03T16:01:50.710545867+08:00 level=info msg="starting MultiOrg Alertmanager"
+logger=ticker t=2023-05-03T16:01:50.710857574+08:00 level=info msg=starting first_tick=2023-05-03T16:02:00+08:00
+logger=context t=2023-05-03T16:02:00.264578366+08:00 level=warn msg="failed to look up session from cookie" error="user token not found"
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:00.276023825+08:00 level=info msg="Request Completed" method=GET path=/ status=302 remote_addr=[::1] time_ms=22 duration=22.503787ms size=29 referer= handler=/
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:11.521975839+08:00 level=error msg="Invalid username or password" error="user not found" remote_addr=[::1] traceID=
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:11.522324386+08:00 level=info msg="Request Completed" method=POST path=/login status=401 remote_addr=[::1] time_ms=34 duration=34.819025ms size=55 referer=http://localhost:3000/login handler=/login
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:21.179215117+08:00 level=error msg="Invalid username or password" error="user not found" remote_addr=[::1] traceID=
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:21.179357175+08:00 level=info msg="Request Completed" method=POST path=/login status=401 remote_addr=[::1] time_ms=33 duration=33.032958ms size=55 referer=http://localhost:3000/login handler=/login
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:23.62202514+08:00 level=error msg="Invalid username or password" error="invalid username or password" remote_addr=[::1] traceID=
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:23.622134005+08:00 level=info msg="Request Completed" method=POST path=/login status=401 remote_addr=[::1] time_ms=81 duration=81.316678ms size=55 referer=http://localhost:3000/login handler=/login
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:24.974159217+08:00 level=error msg="Invalid username or password" error="invalid username or password" remote_addr=[::1] traceID=
+logger=context userId=0 orgId=0 uname= t=2023-05-03T16:02:24.97429325+08:00 level=info msg="Request Completed" method=POST path=/login status=401 remote_addr=[::1] time_ms=59 duration=59.754006ms size=55 referer=http://localhost:3000/login handler=/login
+logger=http.server t=2023-05-03T16:02:28.314545737+08:00 level=info msg="Successful Login" User=admin@localhost
+logger=context userId=1 orgId=1 uname=admin t=2023-05-03T16:02:36.977101811+08:00 level=info msg="Request Completed" method=GET path=/api/live/ws status=-1 remote_addr=[::1] time_ms=33 duration=33.876167ms size=0 referer= handler=/api/live/ws
+logger=cleanup t=2023-05-03T16:11:50.721548007+08:00 level=info msg="Completed cleanup jobs" duration=21.22803ms
+logger=cleanup t=2023-05-03T16:21:50.728139812+08:00 level=info msg="Completed cleanup jobs" duration=27.739445ms
+logger=cleanup t=2023-05-03T16:31:50.73358241+08:00 level=info msg="Completed cleanup jobs" duration=32.867192ms
+logger=cleanup t=2023-05-03T16:41:50.733958604+08:00 level=info msg="Completed cleanup jobs" duration=33.396755ms
+logger=cleanup t=2023-05-03T16:51:50.730008234+08:00 level=info msg="Completed cleanup jobs" duration=30.207661ms
+logger=licensing t=2023-05-03T17:01:50.712341435+08:00 level=info msg="Validated license token" appURL=http://localhost:3000/ source=disk status=NotFound
+logger=licensing.renewal t=2023-05-03T17:01:50.712555146+08:00 level=warn msg="failed to load or validate token" err="license token file not found: /home/ichheit/ich/eBPFMonitoring/grafana-9.4.7/data/license.jwt"
+logger=cleanup t=2023-05-03T17:01:50.716621687+08:00 level=info msg="Completed cleanup jobs" duration=16.020282ms
+logger=cleanup t=2023-05-03T17:11:50.727241949+08:00 level=info msg="Completed cleanup jobs" duration=27.044035ms
+logger=cleanup t=2023-05-03T17:21:50.732747235+08:00 level=info msg="Completed cleanup jobs" duration=32.711293ms
+logger=cleanup t=2023-05-03T17:31:50.712504658+08:00 level=info msg="Completed cleanup jobs" duration=11.84158ms
+logger=cleanup t=2023-05-03T17:41:50.73199662+08:00 level=info msg="Completed cleanup jobs" duration=31.723257ms
+logger=server t=2023-05-03T17:51:35.662179905+08:00 level=info msg="Shutdown started" reason="System signal: terminated"
+logger=tracing t=2023-05-03T17:51:35.689885386+08:00 level=info msg="Closing tracing"
+logger=ticker t=2023-05-03T17:51:35.69061541+08:00 level=info msg=stopped last_tick=2023-05-03T17:51:30+08:00
