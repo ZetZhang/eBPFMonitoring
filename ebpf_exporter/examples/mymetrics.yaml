@@ -1,0 +1,58 @@
+metrics:  
+  histograms:
+    - name: bio_latency
+      help: Block IO latency histogram
+      bucket_type: exp2
+      bucket_min: 0
+      bucket_max: 27
+      bucket_multiplier: 0.000001 # microseconds to seconds
+      labels:
+        - name: device
+          size: 4
+          decoders:
+            - name: majorminor
+        - name: operation
+          size: 4
+          decoders:
+            - name: uint
+            - name: static_map
+              static_map:
+                0: read
+                1: write
+                2: flush
+        - name: bucket
+          size: 8
+          decoders:
+            - name: uint
+  counters:
+    - name: ref_total
+      help: Last level cache operations by type
+      labels:
+        - name: cpu
+          size: 4
+          decoders:
+            - name: uint
+    - name: miss_total
+      help: Last level cache operations by type
+      labels:
+        - name: cpu
+          size: 4
+          decoders:
+            - name: uint
+  
+    - name: page_cache_ops_total
+      help: Page cache operation counters by type
+      table: counts
+      labels:
+        - name: op
+          size: 8
+          decoders:
+            - name: ksym
+    - name: oom_kills_total
+      help: Count global level OOMs
+      perf_event_array: true
+      labels:
+        - name: global_oom
+          size: 1
+          decoders:
+            - name: uint
